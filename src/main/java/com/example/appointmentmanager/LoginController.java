@@ -2,29 +2,52 @@ package com.example.appointmentmanager;
 
 import helper.JDBC;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class LoginController {
     @FXML
-    private Label welcomeText;
+    private TextField fieldUserName;
+    @FXML
+    private PasswordField fieldPassword;
+
+    private ArrayList<String> usernames = new ArrayList<String>();
+    private ArrayList<String> passwords = new ArrayList<String>();
 
     @FXML
-    protected void onHelloButtonClick() {
+    private void initialize() {
         try {
-            PreparedStatement prepstatement = JDBC.connection.prepareStatement("SELECT * FROM users");
-            ResultSet resset = prepstatement.executeQuery();
-            System.out.println(resset.getString("User_Name"));
+            String sql = "SELECT * FROM users";
+            PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
 
-        } catch(Exception e) {
+            while(rs.next()) {
+                usernames.add(rs.getString("User_Name"));
+                passwords.add(rs.getString("Password"));
+            }
+
+//            System.out.println(usernames);
+//            System.out.println(passwords);
+
+        } catch(SQLException e) {
             System.out.println("Ooops didnt work");
         }
     }
-
     @FXML
-    public void initialize() {
+    protected void loginAttempt() {
+        String entered_username = fieldUserName.getText();
+        String entered_password = fieldPassword.getText();
+
+        if (usernames.contains(entered_username)) {
+            if (passwords.contains(entered_password)) {
+                System.out.println("We in this!");
+            }
+        }
 
     }
 }

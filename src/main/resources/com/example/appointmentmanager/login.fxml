@@ -6,16 +6,16 @@
 
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1500.0" spacing="10.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.appointmentmanager.LoginController">
    <children>
-      <TextField alignment="CENTER" maxWidth="250.0" minHeight="40.0">
+      <TextField fx:id="fieldUserName" maxWidth="250.0" minHeight="40.0" promptText="Username">
          <VBox.margin>
             <Insets bottom="10.0" />
          </VBox.margin>
       </TextField>
-      <PasswordField maxWidth="250.0" minHeight="40.0">
+      <PasswordField fx:id="fieldPassword" maxWidth="250.0" minHeight="40.0" promptText="Password">
          <VBox.margin>
             <Insets bottom="40.0" />
          </VBox.margin></PasswordField>
-      <Button minHeight="30.0" minWidth="100.0" mnemonicParsing="false" onAction="#onHelloButtonClick" text="Login" />
+      <Button minHeight="30.0" minWidth="100.0" mnemonicParsing="false" onAction="#loginAttempt" text="Login" />
    </children>
    <padding>
       <Insets top="300.0" />
