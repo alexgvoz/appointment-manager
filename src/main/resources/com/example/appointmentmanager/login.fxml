@@ -15,7 +15,9 @@
          <VBox.margin>
             <Insets bottom="40.0" />
          </VBox.margin></PasswordField>
-      <Button minHeight="30.0" minWidth="100.0" mnemonicParsing="false" onAction="#loginAttempt" text="Login" />
+      <Button fx:id="buttonLogin" minHeight="30.0" minWidth="100.0" mnemonicParsing="false" onAction="#loginAttempt" text="Login" />
+      <VBox prefHeight="467.0" prefWidth="1500.0" />
+      <Label fx:id="labelTimezone" alignment="CENTER" maxWidth="1.7976931348623157E308" text="Label" textAlignment="RIGHT" />
    </children>
    <padding>
       <Insets top="300.0" />

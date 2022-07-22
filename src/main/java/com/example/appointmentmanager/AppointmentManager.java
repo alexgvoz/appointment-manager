@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Locale;
 
 public class AppointmentManager extends Application {
     @Override
@@ -20,6 +21,7 @@ public class AppointmentManager extends Application {
 
     public static void main(String[] args) {
         JDBC.openConnection();
+        //Locale.setDefault(new Locale("fr")); //Sets login page language to French
         launch();
     }
 }
