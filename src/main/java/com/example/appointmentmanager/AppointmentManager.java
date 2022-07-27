@@ -12,7 +12,18 @@ import java.util.Locale;
 public class AppointmentManager extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(AppointmentManager.class.getResource("login.fxml"));
+        final int FORM_NUM = 1;
+
+        FXMLLoader fxmlLoader;
+
+        switch (FORM_NUM) {
+            case 1:
+                fxmlLoader = new FXMLLoader(AppointmentManager.class.getResource("homepage.fxml"));
+                break;
+            default:
+                fxmlLoader = new FXMLLoader(AppointmentManager.class.getResource("login.fxml"));
+        }
+
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Appointment Manager");
         stage.setScene(scene);

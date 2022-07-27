@@ -3,27 +3,52 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.appointmentmanager.HomepageController">
    <children>
-      <MenuBar>
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
+      <TabPane fx:id="tabPaneHomepage" prefHeight="1000.0" prefWidth="1500.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab closable="false" text="Appointments">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="tableAppointments" layoutX="10.0" layoutY="10.0" prefHeight="500.0" prefWidth="1180.0">
+                          <columns>
+                            <TableColumn prefWidth="47.0" text="ID" />
+                            <TableColumn minWidth="0.0" prefWidth="131.0" text="Title" />
+                              <TableColumn prefWidth="249.0" text="Description" />
+                              <TableColumn minWidth="0.0" prefWidth="130.0" text="Location" />
+                              <TableColumn minWidth="0.0" prefWidth="136.0" text="Contact" />
+                              <TableColumn prefWidth="105.0" text="Type" />
+                              <TableColumn prefWidth="120.0" text="Start Time" />
+                              <TableColumn prefWidth="120.0" text="End Time" />
+                              <TableColumn prefWidth="85.0" text="Customer ID" />
+                              <TableColumn prefWidth="56.0" text="User ID" />
+                          </columns>
+                        </TableView>
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+          <Tab closable="false" text="Customers">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="tableCustomers" layoutX="10.0" layoutY="10.0" prefHeight="500.0" prefWidth="1180.0">
+                          <columns>
+                              <TableColumn prefWidth="45.0" text="ID" />
+                            <TableColumn prefWidth="190.0" text="Name" />
+                            <TableColumn minWidth="0.0" prefWidth="225.0" text="Phone" />
+                              <TableColumn minWidth="0.0" prefWidth="165.0" text="Division ID" />
+                              <TableColumn prefWidth="300.0" text="Address" />
+                              <TableColumn prefWidth="255.0" text="Postal Code" />
+                          </columns>
+                        </TableView>
+                        <Button disable="true" layoutX="1130.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="Edit" />
+                        <Button layoutX="1060.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="Add" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
    </children>
 </VBox>

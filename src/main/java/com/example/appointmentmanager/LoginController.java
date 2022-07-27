@@ -9,7 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -35,7 +34,7 @@ public class LoginController {
     private ResourceBundle localetext = ResourceBundle.getBundle("Login", Locale.getDefault());
 
     @FXML
-    private void initialize() throws FileNotFoundException {
+    private void initialize() {
         fieldUserName.setPromptText(localetext.getString("username"));
         fieldPassword.setPromptText(localetext.getString("password"));
         buttonLogin.setText(localetext.getString("login"));
@@ -43,29 +42,29 @@ public class LoginController {
 
     }
     @FXML
-    protected void loginAttempt(ActionEvent event) throws SQLException, IOException {
-        String entered_username = fieldUserName.getText();
-        String entered_password = fieldPassword.getText();
-        ResultSet user = getUser(entered_username);
+    private void loginAttempt(ActionEvent event) throws SQLException, IOException {
+        String enteredUsername = fieldUserName.getText();
+        String enteredPassword = fieldPassword.getText();
+        ResultSet user = getUser(enteredUsername);
 
         if (user.next()) {
-            String user_password = user.getString("Password");
-            if (user_password.equals(entered_password)) {
-                logLoginAttempt(entered_username, true);
+            String userPassword = user.getString("Password");
+            if (userPassword.equals(enteredPassword)) {
+                logLoginAttempt(enteredUsername, true);
                 System.out.println("We in this!");
                 Utility.switchScene(event, "homepage.fxml");
             } else {
                 Utility.showError(localetext.getString("loginFailedTitle"),localetext.getString("loginFail"));
-                logLoginAttempt(entered_username, false);
+                logLoginAttempt(enteredUsername, false);
             }
         } else {
             Utility.showError(localetext.getString("loginFailedTitle"),localetext.getString("loginFail"));
-            logLoginAttempt(entered_username, false);
+            logLoginAttempt(enteredUsername, false);
         }
 
     }
 
-    protected ResultSet getUser(String username) throws SQLException {
+    private ResultSet getUser(String username) throws SQLException {
         String sql = "SELECT User_ID, User_Name, Password FROM users WHERE User_Name = ?";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
 
@@ -75,30 +74,30 @@ public class LoginController {
         return rs;
     }
 
-    protected void logLoginAttempt(String username, boolean attempt_result)  {
+    private void logLoginAttempt(String username, boolean attempt_result)  {
         try {
-            FileWriter log_file = new FileWriter("login_activity", true);
-            PrintWriter log = new PrintWriter(log_file);
-            SimpleDateFormat date_format = new SimpleDateFormat("MM-dd-yyyy");
-            SimpleDateFormat time_format = new SimpleDateFormat("h:mm:ssa zzzz");
-            String date = date_format.format(new Date());
-            String time = time_format.format(new Date());
-            String log_message = new String();
+            FileWriter logFile = new FileWriter("login_activity", true);
+            PrintWriter log = new PrintWriter(logFile);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+            SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm:ssa zzzz");
+            String date = dateFormat.format(new Date());
+            String time = timeFormat.format(new Date());
+            String logMessage;
 
             if (attempt_result) {
-                log_message = "Successful login attempt\n";
+                logMessage = "Successful login attempt\n";
             } else {
-                log_message = "Unsuccessful login attempt\n";
+                logMessage = "Unsuccessful login attempt\n";
             }
 
             if (username.isBlank()) {
                 username = "Not entered";
             }
 
-            log_message += String.format("User: %s\n", username);
-            log_message += String.format("Date: %s\n", date);
-            log_message += String.format("Time: %s\n\n", time);
-            log.append(log_message);
+            logMessage += String.format("User: %s\n", username);
+            logMessage += String.format("Date: %s\n", date);
+            logMessage += String.format("Time: %s\n\n", time);
+            log.append(logMessage);
             log.close();
         } catch(Exception e) {
             e.printStackTrace();

@@ -1,12 +1,15 @@
 package helper;
 
 import com.example.appointmentmanager.AppointmentManager;
+import com.example.appointmentmanager.Customer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -37,6 +40,9 @@ public class Utility {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    public static void setColumnValue(TableView<Object> table, int column, String id) {
+        table.getColumns().get(column).setCellValueFactory(new PropertyValueFactory<>(id));
     }
 }
