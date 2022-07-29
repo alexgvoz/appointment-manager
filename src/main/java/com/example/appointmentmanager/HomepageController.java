@@ -5,12 +5,14 @@ import helper.Utility;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class HomepageController {
 
@@ -20,18 +22,24 @@ public class HomepageController {
     private TableView tableCustomers;
     @FXML
     private TableView tableAppointments;
+    @FXML
+    private ChoiceBox choiceFilter;
+    @FXML
+    private ToggleGroup groupFilters;
 
     private ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
     private ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
+    private ObservableList<Appointment> filteredAppointments = FXCollections.observableArrayList();
     @FXML
     private void initialize() throws SQLException {
         getCustomers();
         getAppointments();
+        System.out.println();
 
-        System.out
 
         setCustomerColumns();
         setAppointmentColumns();
+        setChoiceBoxItems();
 
     }
 
@@ -83,8 +91,9 @@ public class HomepageController {
                     appointmentSet.getString("Type"),
                     appointmentSet.getInt("Customer_ID"),
                     appointmentSet.getInt("User_ID"),
-                    appointmentSet.getDate("Start").toLocalDate(),
-                    appointmentSet.getDate("End").toLocalDate()
+                    appointmentSet.getTimestamp("Start").toLocalDateTime(),
+                    appointmentSet.getTimestamp("End").toLocalDateTime()
+
             );
 
             allAppointments.add(curAppointment);
@@ -98,12 +107,30 @@ public class HomepageController {
         Utility.setColumnValue(tableAppointments, 3, "location");
         Utility.setColumnValue(tableAppointments, 4, "contact");
         Utility.setColumnValue(tableAppointments, 5, "type");
-        Utility.setColumnValue(tableAppointments, 6, "start");
-        Utility.setColumnValue(tableAppointments, 7, "end");
-        Utility.setColumnValue(tableAppointments, 8, "customerID");
-        Utility.setColumnValue(tableAppointments, 9, "userID");
+        Utility.setColumnValue(tableAppointments, 6, "startDate");
+        Utility.setColumnValue(tableAppointments, 7, "startTime");
+        Utility.setColumnValue(tableAppointments, 8, "endDate");
+        Utility.setColumnValue(tableAppointments, 9, "endTime");
+        Utility.setColumnValue(tableAppointments, 10, "customerID");
+        Utility.setColumnValue(tableAppointments, 11, "userID");
 
         tableAppointments.setItems(allAppointments);
         tableAppointments.getSortOrder().add(tableAppointments.getColumns().get(0));
+    }
+
+    private void setChoiceBoxItems() {
+        ObservableList<String> months = FXCollections.observableArrayList("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+        choiceFilter.setItems(months);
+        choiceFilter.getSelectionModel().selectFirst();
+    }
+
+    @FXML
+    private void setChoiceFilter() {
+        filteredAppointments = FXCollections.observableArrayList(allAppointments.stream()
+                .filter(appointment -> appointment.getStartDateTime()
+                        .getMonth().toString()
+                        .equalsIgnoreCase(choiceFilter.getValue().toString())).collect(Collectors.toList()));
+
+        tableAppointments.setItems(filteredAppointments);
     }
 }
