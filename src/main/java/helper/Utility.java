@@ -45,7 +45,7 @@ public class Utility {
         }
     }
 
-    public static void setColumnValue(TableView<Object> table, int column, String id) {
+    public static void setColumnValue(TableView<?> table, int column, String id) {
         TableColumn col = table.getColumns().get(column);
         col.setCellValueFactory(new PropertyValueFactory<>(id));
     }

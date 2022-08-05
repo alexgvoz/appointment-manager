@@ -29,13 +29,13 @@
                         </TableView>
                         <Button layoutX="1130.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="Edit" />
                         <Button layoutX="1060.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="Add" />
-                        <RadioButton layoutX="170.0" layoutY="527.0" mnemonicParsing="false" selected="true" text="Monthly">
+                        <ComboBox fx:id="comboBoxFilter" layoutX="10.0" layoutY="520.0" onAction="#filterAppointments" prefHeight="30.0" prefWidth="150.0" />
+                        <RadioButton fx:id="radioMonthly" layoutX="170.0" layoutY="527.0" mnemonicParsing="false" onMouseClicked="#setChoiceFilter" selected="true" text="Monthly">
                            <toggleGroup>
                               <ToggleGroup fx:id="groupFilters" />
                            </toggleGroup>
                         </RadioButton>
-                        <RadioButton layoutX="246.0" layoutY="527.0" mnemonicParsing="false" text="Weekly" toggleGroup="$groupFilters" />
-                        <ChoiceBox fx:id="choiceFilter" layoutX="10.0" layoutY="520.0" onAction="#setChoiceFilter" prefHeight="30.0" prefWidth="150.0" />
+                        <RadioButton fx:id="radioWeekly" layoutX="246.0" layoutY="527.0" mnemonicParsing="false" onMouseClicked="#setChoiceFilter" text="Weekly" toggleGroup="$groupFilters" />
                      </children></AnchorPane>
             </content>
           </Tab>
@@ -53,8 +53,8 @@
                               <TableColumn prefWidth="253.0" text="Postal Code" />
                           </columns>
                         </TableView>
-                        <Button disable="true" layoutX="1130.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="Edit" />
-                        <Button layoutX="1060.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="Add" />
+                        <Button layoutX="1130.0" layoutY="520.0" mnemonicParsing="false" onAction="#switchToEditCustomer" prefHeight="30.0" prefWidth="60.0" text="Edit" />
+                        <Button layoutX="1060.0" layoutY="520.0" mnemonicParsing="false" onAction="#switchToAddCustomer" prefHeight="30.0" prefWidth="60.0" text="Add" />
                      </children>
                   </AnchorPane>
             </content>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.appointmentmanager.CustomerFormController">
+   <children>
+      <Label text="Add Customer">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+         <padding>
+            <Insets bottom="70.0" />
+         </padding>
+      </Label>
+      <HBox alignment="CENTER_LEFT" prefWidth="200.0">
+         <children>
+            <Label text="ID:">
+               <padding>
+                  <Insets right="90.0" />
+               </padding>
+            </Label>
+            <TextField fx:id="fieldID" disable="true" prefHeight="30.0" />
+         </children>
+         <padding>
+            <Insets bottom="15.0" />
+         </padding>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" layoutX="60.0" layoutY="137.0" prefWidth="200.0">
+         <children>
+            <Label text="Name:">
+               <padding>
+                  <Insets right="70.0" />
+               </padding>
+            </Label>
+            <TextField fx:id="fieldName" prefHeight="30.0" />
+         </children>
+         <padding>
+            <Insets bottom="15.0" />
+         </padding>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" layoutX="60.0" layoutY="172.0" prefWidth="200.0">
+         <children>
+            <Label text="Phone Number:" />
+            <TextField fx:id="fieldPhone" prefHeight="30.0">
+               <HBox.margin>
+                  <Insets left="21.0" />
+               </HBox.margin></TextField>
+         </children>
+         <padding>
+            <Insets bottom="15.0" />
+         </padding>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" layoutX="60.0" layoutY="207.0" prefWidth="200.0">
+         <children>
+            <Label text="Address:">
+               <padding>
+                  <Insets right="59.0" />
+               </padding>
+            </Label>
+            <TextField fx:id="fieldAddress" prefHeight="30.0" />
+         </children>
+         <padding>
+            <Insets bottom="15.0" />
+         </padding>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" layoutX="60.0" layoutY="242.0" prefWidth="200.0">
+         <children>
+            <Label text="Postal Code:">
+               <padding>
+                  <Insets right="39.0" />
+               </padding>
+            </Label>
+            <TextField fx:id="fieldPostal" prefHeight="30.0" />
+         </children>
+         <padding>
+            <Insets bottom="10.0" />
+         </padding>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" prefWidth="200.0">
+         <children>
+            <Label text="Country:">
+               <padding>
+                  <Insets right="60.0" />
+               </padding>
+            </Label>
+            <ComboBox fx:id="comboBoxCountry" prefHeight="30.0" prefWidth="150.0">
+               <HBox.margin>
+                  <Insets right="31.0" />
+               </HBox.margin>
+            </ComboBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" />
+         </padding>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" layoutX="60.0" layoutY="337.0" prefWidth="200.0">
+         <children>
+            <Label text="Division: " />
+            <ComboBox fx:id="comboBoxDivision" layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="150.0">
+               <HBox.margin>
+                  <Insets left="57.0" />
+               </HBox.margin>
+            </ComboBox>
+         </children>
+      </HBox>
+      <HBox alignment="BOTTOM_RIGHT" prefHeight="163.0" prefWidth="1150.0">
+         <children>
+            <Button layoutX="1090.0" layoutY="192.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="Add">
+               <HBox.margin>
+                  <Insets bottom="18.0" right="10.0" />
+               </HBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#switchToHomepage" prefHeight="30.0" prefWidth="60.0" text="Cancel">
+               <HBox.margin>
+                  <Insets bottom="18.0" right="10.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets left="50.0" top="50.0" />
+   </padding>
+</VBox>

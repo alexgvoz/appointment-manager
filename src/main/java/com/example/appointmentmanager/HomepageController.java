@@ -4,42 +4,46 @@ import helper.JDBC;
 import helper.Utility;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
+import java.time.temporal.WeekFields;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class HomepageController {
 
     @FXML
-    private TabPane tabPaneHomepage;
+    public static TabPane tabPaneHomepage;
     @FXML
-    private TableView tableCustomers;
+    private TableView<Customer> tableCustomers;
     @FXML
-    private TableView tableAppointments;
+    private TableView<Appointment> tableAppointments;
     @FXML
-    private ChoiceBox choiceFilter;
+    private ComboBox comboBoxFilter;
     @FXML
-    private ToggleGroup groupFilters;
+    private RadioButton radioMonthly;
+    @FXML
+    private RadioButton radioWeekly;
 
     private ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
     private ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
     private ObservableList<Appointment> filteredAppointments = FXCollections.observableArrayList();
     @FXML
     private void initialize() throws SQLException {
+        comboBoxFilter.setVisibleRowCount(5);
         getCustomers();
         getAppointments();
-        System.out.println();
-
 
         setCustomerColumns();
         setAppointmentColumns();
-        setChoiceBoxItems();
+        setChoiceFilter();
 
     }
 
@@ -114,23 +118,76 @@ public class HomepageController {
         Utility.setColumnValue(tableAppointments, 10, "customerID");
         Utility.setColumnValue(tableAppointments, 11, "userID");
 
-        tableAppointments.setItems(allAppointments);
         tableAppointments.getSortOrder().add(tableAppointments.getColumns().get(0));
     }
 
-    private void setChoiceBoxItems() {
+    private void setChoiceBoxMonths() {
         ObservableList<String> months = FXCollections.observableArrayList("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
-        choiceFilter.setItems(months);
-        choiceFilter.getSelectionModel().selectFirst();
+        int curMonth = java.time.LocalDateTime.now().getMonthValue() - 1;
+
+        comboBoxFilter.setItems(months);
+        comboBoxFilter.getSelectionModel().select(months.get(curMonth));
+    }
+
+    private void setChoiceBoxWeeks() {
+        ObservableList<Integer> weeks = FXCollections.observableArrayList();
+        int week = 1;
+
+        while (Calendar.getInstance().getActualMaximum(Calendar.WEEK_OF_YEAR) != week) {
+            weeks.add(week);
+            week += 1;
+        }
+        comboBoxFilter.setItems(weeks);
+        comboBoxFilter.getSelectionModel().selectFirst();
     }
 
     @FXML
     private void setChoiceFilter() {
-        filteredAppointments = FXCollections.observableArrayList(allAppointments.stream()
-                .filter(appointment -> appointment.getStartDateTime()
-                        .getMonth().toString()
-                        .equalsIgnoreCase(choiceFilter.getValue().toString())).collect(Collectors.toList()));
+        if (radioMonthly.isSelected()) {
+            setChoiceBoxMonths();
 
-        tableAppointments.setItems(filteredAppointments);
+            filterAppointments();
+        } else {
+            setChoiceBoxWeeks();
+
+            filterAppointments();
+        }
+
+    }
+
+    @FXML
+    private void filterAppointments() {
+        if (radioMonthly.isSelected() && comboBoxFilter.getValue() != null) {
+            filteredAppointments = FXCollections.observableArrayList(allAppointments.stream()
+                    .filter(appointment -> appointment.getStartDateTime()
+                    .getMonth().toString()
+                    .equalsIgnoreCase(comboBoxFilter.getValue().toString())).collect(Collectors.toList()));
+
+
+            tableAppointments.setItems(filteredAppointments);
+        } else if (comboBoxFilter.getValue() != null) {
+            WeekFields localWeekFields = WeekFields.of(Locale.getDefault());
+
+            filteredAppointments = FXCollections.observableArrayList(allAppointments.stream()
+                    .filter(appointment -> appointment.getStartDateTime()
+                            .get(localWeekFields.weekOfYear()) == (Integer) comboBoxFilter.getValue()).collect(Collectors.toList()));
+
+            tableAppointments.setItems(filteredAppointments);
+        }
+    }
+
+    @FXML
+    private void switchToAddCustomer(ActionEvent event) throws IOException {
+        Utility.switchScene(event, "customerform.fxml");
+    }
+
+    @FXML
+    private void switchToEditCustomer(ActionEvent event) throws IOException {
+        if (tableCustomers.getSelectionModel().getSelectedItem() != null) {
+            new CustomerFormController().setCustomer(tableCustomers.getSelectionModel().getSelectedItem());
+            Utility.switchScene(event, "customerform.fxml");
+        } else {
+            Utility.showError("No customer selected", "Pleaese select a customer.");
+        }
     }
 }
