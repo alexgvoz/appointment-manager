@@ -3,21 +3,19 @@ package com.example.appointmentmanager;
 import helper.JDBC;
 import helper.Utility;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class CustomerFormController {
 
@@ -35,8 +33,13 @@ public class CustomerFormController {
     private ComboBox comboBoxCountry;
     @FXML
     private ComboBox comboBoxDivision;
+    @FXML
+    private Label labelCustomer;
+    @FXML
+    private Button buttonCustomer;
 
-    private static Customer customer= null;
+    private static Customer customer = null;
+    private static Integer nextID = null;
     private Map<String, Integer> countryList = new HashMap<>();
     private Map<String, Integer> divisionList = new HashMap<>();
     private int selectedCountry = 0;
@@ -46,30 +49,23 @@ public class CustomerFormController {
         getCountries();
 
         if (customer != null) {
+            labelCustomer.setText("Edit Customer");
+            buttonCustomer.setText("Save");
             fieldID.setText(String.valueOf(customer.getId()));
             fieldName.setText(customer.getName());
             fieldPhone.setText(customer.getPhone());
             fieldAddress.setText(customer.getAddress());
             fieldPostal.setText(customer.getPostalCode());
+
+            getCountryFromDivision();
         } else {
-            fieldID.setText(String.valueOf(getNextID()));
+            fieldID.setText(String.valueOf(nextID));
         }
     }
 
     public void setCustomer(Customer customer) { this.customer = customer; }
 
-    private int getNextID() throws SQLException {
-        String sql = "SELECT `AUTO_INCREMENT` " +
-                "FROM  INFORMATION_SCHEMA.TABLES " +
-                "WHERE TABLE_SCHEMA = 'client_schedule' " +
-                "AND   TABLE_NAME   = 'customers';";
-        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-        ResultSet autoInc = ps.executeQuery();
-
-        autoInc.next();
-
-        return autoInc.getInt(1);
-    }
+    public void setNextID(Integer id) { this.nextID = id; }
 
     private void getCountries() throws SQLException {
         String sql = "SELECT Country_ID, Country " +
@@ -82,32 +78,66 @@ public class CustomerFormController {
         }
 
         comboBoxCountry.setItems(FXCollections.observableArrayList(countryList.keySet()));
-
-
-        if (customer != null) {
-            comboBoxCountry.getSelectionModel().getSelectedItem().toString();
-//            for (String country : countryList) {
-//                if (customer.getDivisionID() == 0 ) {
-//                    // TODO: 8/4/2022
-//                }
-//            }
-        } else {
-            comboBoxCountry.getSelectionModel().selectFirst();
-            getDivisions();
-        }
+        comboBoxCountry.getSelectionModel().selectFirst();
+        getDivisions();
     }
 
+    @FXML
    private void getDivisions() throws SQLException {
        String sql = "SELECT Division_ID, Division, Country_ID " +
                "FROM  first_level_divisions";
        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
        ResultSet divisionData = ps.executeQuery();
 
+       selectedCountry = countryList.get(comboBoxCountry.getValue());
+       divisionList.clear();
+
        while (divisionData.next()) {
-           if (divisionData.getInt("Country_ID") == countryList.get(comboBoxCountry.getValue())) {
-               // TODO: 8/4/2022  
+           if (divisionData.getInt("Country_ID") == selectedCountry) {
+               divisionList.put(divisionData.getString("Division"), divisionData.getInt("Division_ID"));
            }
        }
+
+       comboBoxDivision.setItems(FXCollections.observableArrayList(divisionList.keySet()));
+       comboBoxDivision.getSelectionModel().selectFirst();
+   }
+
+   private void getCountryFromDivision() throws SQLException {
+       String sql = "SELECT d.Division_ID, d.Division, d.Country_ID, c.Country " +
+               "FROM  first_level_divisions AS d " +
+               "JOIN countries AS c ON d.Country_ID = c.Country_ID";
+       PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+       ResultSet divisionData = ps.executeQuery();
+
+       while (divisionData.next()) {
+           if (divisionData.getInt("Division_ID") == customer.getDivisionID()) {
+               comboBoxCountry.getSelectionModel().select(divisionData.getString("Country"));
+               getDivisions();
+               comboBoxDivision.getSelectionModel().select(divisionData.getString("Division"));
+           }
+       }
+   }
+
+   @FXML
+   private void handleCustomer(ActionEvent event) throws SQLException, IOException {
+        if (customer != null) {
+            String sql = "UPDATE customers " +
+                    String.format("SET Customer_Name='%s', Address='%s', Phone='%s', Postal_Code='%s', Division_ID=%d ", fieldName.getText(), fieldAddress.getText(), fieldPhone.getText(), fieldPostal.getText(), divisionList.get(comboBoxDivision.getValue())) +
+                    String.format("WHERE Customer_ID=%d", Integer.parseInt(fieldID.getText()));
+            PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+            ps.executeUpdate();
+
+            customer = null;
+            Utility.switchScene(event, "homepage.fxml");
+        } else {
+            String sql = "INSERT INTO customers (Customer_Name, Address, Phone, Postal_Code, Division_ID) " +
+                    String.format("VALUES ('%s', '%s', '%s', '%s', %d)", fieldName.getText(), fieldAddress.getText(), fieldPhone.getText(), fieldPostal.getText(), divisionList.get(comboBoxDivision.getValue()));
+            PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+            ps.executeUpdate();
+
+            System.out.println("Customer added.");
+            //Utility.switchScene(event, "homepage.fxml");
+        }
    }
 
     @FXML

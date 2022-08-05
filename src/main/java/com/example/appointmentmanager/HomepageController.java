@@ -178,6 +178,7 @@ public class HomepageController {
 
     @FXML
     private void switchToAddCustomer(ActionEvent event) throws IOException {
+        new CustomerFormController().setNextID(allCustomers.get(allCustomers.size() - 1).getId() + 1);
         Utility.switchScene(event, "customerform.fxml");
     }
 
