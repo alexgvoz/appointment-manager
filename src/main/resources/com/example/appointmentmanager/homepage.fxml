@@ -53,8 +53,10 @@
                               <TableColumn prefWidth="253.0" text="Postal Code" />
                           </columns>
                         </TableView>
-                        <Button layoutX="1130.0" layoutY="520.0" mnemonicParsing="false" onAction="#switchToEditCustomer" prefHeight="30.0" prefWidth="60.0" text="Edit" />
-                        <Button layoutX="1060.0" layoutY="520.0" mnemonicParsing="false" onAction="#switchToAddCustomer" prefHeight="30.0" prefWidth="60.0" text="Add" />
+                        <Button layoutX="1060.0" layoutY="520.0" mnemonicParsing="false" onAction="#switchToEditCustomer" prefHeight="30.0" prefWidth="60.0" text="Edit" />
+                        <Button layoutX="990.0" layoutY="520.0" mnemonicParsing="false" onAction="#switchToAddCustomer" prefHeight="30.0" prefWidth="60.0" text="Add" />
+                        <Button layoutX="1130.0" layoutY="520.0" mnemonicParsing="false" onAction="#deleteCustomer" prefHeight="30.0" prefWidth="60.0" text="Delete" />
+                        <Label fx:id="labelMessages" layoutX="10.0" layoutY="527.0" />
                      </children>
                   </AnchorPane>
             </content>

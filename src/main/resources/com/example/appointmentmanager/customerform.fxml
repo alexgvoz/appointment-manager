@@ -35,7 +35,11 @@
                   <Insets right="70.0" />
                </padding>
             </Label>
-            <TextField fx:id="fieldName" prefHeight="30.0" />
+            <TextField fx:id="fieldName" prefHeight="30.0">
+               <HBox.margin>
+                  <Insets right="30.0" />
+               </HBox.margin></TextField>
+            <Label fx:id="labelName" />
          </children>
          <padding>
             <Insets bottom="15.0" />
@@ -46,8 +50,9 @@
             <Label text="Phone Number:" />
             <TextField fx:id="fieldPhone" prefHeight="30.0">
                <HBox.margin>
-                  <Insets left="21.0" />
+                  <Insets left="21.0" right="30.0" />
                </HBox.margin></TextField>
+            <Label fx:id="labelPhone" />
          </children>
          <padding>
             <Insets bottom="15.0" />
@@ -60,7 +65,11 @@
                   <Insets right="59.0" />
                </padding>
             </Label>
-            <TextField fx:id="fieldAddress" prefHeight="30.0" />
+            <TextField fx:id="fieldAddress" prefHeight="30.0">
+               <HBox.margin>
+                  <Insets right="30.0" />
+               </HBox.margin></TextField>
+            <Label fx:id="labelAddress" />
          </children>
          <padding>
             <Insets bottom="15.0" />
@@ -73,7 +82,11 @@
                   <Insets right="39.0" />
                </padding>
             </Label>
-            <TextField fx:id="fieldPostal" prefHeight="30.0" />
+            <TextField fx:id="fieldPostal" prefHeight="30.0">
+               <HBox.margin>
+                  <Insets right="30.0" />
+               </HBox.margin></TextField>
+            <Label fx:id="labelPostal" />
          </children>
          <padding>
             <Insets bottom="10.0" />
@@ -110,12 +123,12 @@
          <children>
             <Button fx:id="buttonCustomer" layoutX="1090.0" layoutY="192.0" mnemonicParsing="false" onAction="#handleCustomer" prefHeight="30.0" prefWidth="60.0" text="Add">
                <HBox.margin>
-                  <Insets bottom="18.0" right="10.0" />
+                  <Insets bottom="21.0" right="10.0" />
                </HBox.margin>
             </Button>
             <Button mnemonicParsing="false" onAction="#switchToHomepage" prefHeight="30.0" prefWidth="60.0" text="Cancel">
                <HBox.margin>
-                  <Insets bottom="18.0" right="10.0" />
+                  <Insets bottom="21.0" right="10.0" />
                </HBox.margin>
             </Button>
          </children>

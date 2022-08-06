@@ -31,6 +31,8 @@ public class HomepageController {
     private RadioButton radioMonthly;
     @FXML
     private RadioButton radioWeekly;
+    @FXML
+    private Label labelMessages;
 
     private ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
     private ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
@@ -178,7 +180,6 @@ public class HomepageController {
 
     @FXML
     private void switchToAddCustomer(ActionEvent event) throws IOException {
-        new CustomerFormController().setNextID(allCustomers.get(allCustomers.size() - 1).getId() + 1);
         Utility.switchScene(event, "customerform.fxml");
     }
 
@@ -188,7 +189,25 @@ public class HomepageController {
             new CustomerFormController().setCustomer(tableCustomers.getSelectionModel().getSelectedItem());
             Utility.switchScene(event, "customerform.fxml");
         } else {
-            Utility.showError("No customer selected", "Pleaese select a customer.");
+            Utility.showError("No customer selected", "Pleaese select a customer to edit.");
+        }
+    }
+
+    @FXML
+
+    private void deleteCustomer(ActionEvent event) throws IOException, SQLException {
+        if (tableCustomers.getSelectionModel().getSelectedItem() != null) {
+            if (Utility.showConfirm("Are you sure you want to delete this customer?", "Deleting a customer will also delete all appointments associated with them.")) {
+                String sql = "DELETE FROM customers " +
+                        String.format("WHERE Customer_ID=%d", tableCustomers.getSelectionModel().getSelectedItem().getId());
+                PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+                ps.executeUpdate();
+
+                labelMessages.setText(tableCustomers.getSelectionModel().getSelectedItem().getName() + " has been deleted.");
+                allCustomers.remove(tableCustomers.getSelectionModel().getSelectedItem());
+            }
+        } else {
+            Utility.showError("No customer selected!", "Pleaese select a customer to delete.");
         }
     }
 }

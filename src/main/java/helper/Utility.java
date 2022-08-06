@@ -8,15 +8,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class Utility {
 
@@ -33,6 +31,22 @@ public class Utility {
         alert.initOwner(stage);
         alert.showAndWait();
     }
+    public static boolean showConfirm(String header, String text) {
+        Alert.AlertType type = Alert.AlertType.CONFIRMATION;
+        Alert alert = new Alert(type);
+        alert.setHeaderText(header);
+        alert.setContentText(text);
+
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.initOwner(stage);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.CANCEL) {
+            return false;
+        }
+
+        return true;
+    }
 
     public static void switchScene(ActionEvent event, String location) throws IOException {
         try {
@@ -48,5 +62,15 @@ public class Utility {
     public static void setColumnValue(TableView<?> table, int column, String id) {
         TableColumn col = table.getColumns().get(column);
         col.setCellValueFactory(new PropertyValueFactory<>(id));
+    }
+
+    public static boolean checkField(TextField field) {
+        if (field.getText().isBlank()) {
+            field.setStyle("-fx-border-color : red;");
+            return true;
+        } else{
+            field.setStyle("");
+            return false;
+        }
     }
 }

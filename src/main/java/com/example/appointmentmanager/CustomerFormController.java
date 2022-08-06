@@ -30,6 +30,14 @@ public class CustomerFormController {
     @FXML
     private TextField fieldPostal;
     @FXML
+    private Label labelName;
+    @FXML
+    private Label labelPhone;
+    @FXML
+    private Label labelAddress;
+    @FXML
+    private Label labelPostal;
+    @FXML
     private ComboBox comboBoxCountry;
     @FXML
     private ComboBox comboBoxDivision;
@@ -39,7 +47,6 @@ public class CustomerFormController {
     private Button buttonCustomer;
 
     private static Customer customer = null;
-    private static Integer nextID = null;
     private Map<String, Integer> countryList = new HashMap<>();
     private Map<String, Integer> divisionList = new HashMap<>();
     private int selectedCountry = 0;
@@ -59,13 +66,25 @@ public class CustomerFormController {
 
             getCountryFromDivision();
         } else {
-            fieldID.setText(String.valueOf(nextID));
+
+            fieldID.setText(String.valueOf(getNextID()));
         }
     }
 
     public void setCustomer(Customer customer) { this.customer = customer; }
 
-    public void setNextID(Integer id) { this.nextID = id; }
+    public int getNextID() throws SQLException {
+        String sql = "SELECT `AUTO_INCREMENT` " +
+                "FROM  INFORMATION_SCHEMA.TABLES " +
+                "WHERE TABLE_SCHEMA = 'client_schedule' " +
+                "AND   TABLE_NAME   = 'customers'";
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        ResultSet autoInc = ps.executeQuery();
+
+        autoInc.next();
+
+        return autoInc.getInt(1);
+    }
 
     private void getCountries() throws SQLException {
         String sql = "SELECT Country_ID, Country " +
@@ -120,23 +139,51 @@ public class CustomerFormController {
 
    @FXML
    private void handleCustomer(ActionEvent event) throws SQLException, IOException {
-        if (customer != null) {
-            String sql = "UPDATE customers " +
-                    String.format("SET Customer_Name='%s', Address='%s', Phone='%s', Postal_Code='%s', Division_ID=%d ", fieldName.getText(), fieldAddress.getText(), fieldPhone.getText(), fieldPostal.getText(), divisionList.get(comboBoxDivision.getValue())) +
-                    String.format("WHERE Customer_ID=%d", Integer.parseInt(fieldID.getText()));
-            PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-            ps.executeUpdate();
+        Integer errors = 0;
 
-            customer = null;
-            Utility.switchScene(event, "homepage.fxml");
+        if (Utility.checkField(fieldName)){
+            labelName.setText(String.format("Name field can't be empty."));
+            errors += 1;
         } else {
-            String sql = "INSERT INTO customers (Customer_Name, Address, Phone, Postal_Code, Division_ID) " +
-                    String.format("VALUES ('%s', '%s', '%s', '%s', %d)", fieldName.getText(), fieldAddress.getText(), fieldPhone.getText(), fieldPostal.getText(), divisionList.get(comboBoxDivision.getValue()));
-            PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-            ps.executeUpdate();
+            labelName.setText("");
+        }
+        if (Utility.checkField(fieldPhone)) {
+            labelPhone.setText(String.format("Phone field can't be empty."));
+            errors += 1;
+        } else {
+            labelPhone.setText("");
+        }
+        if (Utility.checkField(fieldAddress)) {
+            labelAddress.setText(String.format("Address field can't be empty."));
+            errors += 1;
+        } else {
+            labelAddress.setText("");
+        }
+        if (Utility.checkField(fieldPostal)) {
+            labelPostal.setText(String.format("Postal code field can't be empty."));
+            errors += 1;
+        } else {
+            labelPostal.setText("");
+        }
 
-            System.out.println("Customer added.");
-            //Utility.switchScene(event, "homepage.fxml");
+        if (errors == 0) {
+            if (customer != null) {
+                String sql = "UPDATE customers " +
+                        String.format("SET Customer_Name='%s', Address='%s', Phone='%s', Postal_Code='%s', Division_ID=%d ", fieldName.getText(), fieldAddress.getText(), fieldPhone.getText(), fieldPostal.getText(), divisionList.get(comboBoxDivision.getValue())) +
+                        String.format("WHERE Customer_ID=%d", Integer.parseInt(fieldID.getText()));
+                PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+                ps.executeUpdate();
+
+                customer = null;
+                Utility.switchScene(event, "homepage.fxml");
+            } else {
+                String sql = "INSERT INTO customers (Customer_Name, Address, Phone, Postal_Code, Division_ID) " +
+                        String.format("VALUES ('%s', '%s', '%s', '%s', %d)", fieldName.getText(), fieldAddress.getText(), fieldPhone.getText(), fieldPostal.getText(), divisionList.get(comboBoxDivision.getValue()));
+                PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+                ps.executeUpdate();
+
+                Utility.switchScene(event, "homepage.fxml");
+            }
         }
    }
 
