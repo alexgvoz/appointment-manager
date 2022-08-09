@@ -27,15 +27,18 @@
                               <TableColumn prefWidth="57.0" text="User ID" />
                           </columns>
                         </TableView>
-                        <Button layoutX="1130.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="Edit" />
-                        <Button layoutX="1060.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="Add" />
-                        <ComboBox fx:id="comboBoxFilter" layoutX="10.0" layoutY="520.0" onAction="#filterAppointments" prefHeight="30.0" prefWidth="150.0" />
-                        <RadioButton fx:id="radioMonthly" layoutX="170.0" layoutY="527.0" mnemonicParsing="false" onMouseClicked="#setChoiceFilter" selected="true" text="Monthly">
+                        <Button layoutX="1060.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="Edit" />
+                        <Button layoutX="990.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="Add" />
+                        <RadioButton fx:id="radioMonthly" layoutX="729.0" layoutY="527.0" mnemonicParsing="false" selected="true" text="Monthly">
                            <toggleGroup>
                               <ToggleGroup fx:id="groupFilters" />
                            </toggleGroup>
                         </RadioButton>
-                        <RadioButton fx:id="radioWeekly" layoutX="246.0" layoutY="527.0" mnemonicParsing="false" onMouseClicked="#setChoiceFilter" text="Weekly" toggleGroup="$groupFilters" />
+                        <RadioButton fx:id="radioWeekly" layoutX="805.0" layoutY="527.0" mnemonicParsing="false" text="Weekly" toggleGroup="$groupFilters" />
+                        <Button layoutX="1130.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="Delete" />
+                        <DatePicker fx:id="pickerFilter" editable="false" layoutX="513.0" layoutY="520.0" onAction="#filterAppointments" prefHeight="30.0" showWeekNumbers="true" />
+                        <Button layoutX="689.0" layoutY="520.0" mnemonicParsing="false" onAction="#clearDate" prefHeight="30.0" prefWidth="30.0" text="C" />
+                        <Label fx:id="labelAppointments" layoutX="10.0" layoutY="527.0" />
                      </children></AnchorPane>
             </content>
           </Tab>
@@ -56,7 +59,7 @@
                         <Button layoutX="1060.0" layoutY="520.0" mnemonicParsing="false" onAction="#switchToEditCustomer" prefHeight="30.0" prefWidth="60.0" text="Edit" />
                         <Button layoutX="990.0" layoutY="520.0" mnemonicParsing="false" onAction="#switchToAddCustomer" prefHeight="30.0" prefWidth="60.0" text="Add" />
                         <Button layoutX="1130.0" layoutY="520.0" mnemonicParsing="false" onAction="#deleteCustomer" prefHeight="30.0" prefWidth="60.0" text="Delete" />
-                        <Label fx:id="labelMessages" layoutX="10.0" layoutY="527.0" />
+                        <Label fx:id="labelCustomers" layoutX="10.0" layoutY="527.0" />
                      </children>
                   </AnchorPane>
             </content>

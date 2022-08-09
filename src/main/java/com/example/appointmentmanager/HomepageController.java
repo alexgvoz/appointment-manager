@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.temporal.WeekFields;
 import java.util.Calendar;
 import java.util.Locale;
@@ -33,19 +34,22 @@ public class HomepageController {
     private RadioButton radioWeekly;
     @FXML
     private Label labelMessages;
+    @FXML
+    private DatePicker pickerFilter;
 
     private ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
     private ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
     private ObservableList<Appointment> filteredAppointments = FXCollections.observableArrayList();
+
     @FXML
     private void initialize() throws SQLException {
-        comboBoxFilter.setVisibleRowCount(5);
         getCustomers();
         getAppointments();
 
         setCustomerColumns();
         setAppointmentColumns();
-        setChoiceFilter();
+
+        tableAppointments.setItems(allAppointments);
 
     }
 
@@ -123,59 +127,34 @@ public class HomepageController {
         tableAppointments.getSortOrder().add(tableAppointments.getColumns().get(0));
     }
 
-    private void setChoiceBoxMonths() {
-        ObservableList<String> months = FXCollections.observableArrayList("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
-        int curMonth = java.time.LocalDateTime.now().getMonthValue() - 1;
-
-        comboBoxFilter.setItems(months);
-        comboBoxFilter.getSelectionModel().select(months.get(curMonth));
-    }
-
-    private void setChoiceBoxWeeks() {
-        ObservableList<Integer> weeks = FXCollections.observableArrayList();
-        int week = 1;
-
-        while (Calendar.getInstance().getActualMaximum(Calendar.WEEK_OF_YEAR) != week) {
-            weeks.add(week);
-            week += 1;
-        }
-        comboBoxFilter.setItems(weeks);
-        comboBoxFilter.getSelectionModel().selectFirst();
-    }
-
-    @FXML
-    private void setChoiceFilter() {
-        if (radioMonthly.isSelected()) {
-            setChoiceBoxMonths();
-
-            filterAppointments();
-        } else {
-            setChoiceBoxWeeks();
-
-            filterAppointments();
-        }
-
-    }
-
     @FXML
     private void filterAppointments() {
-        if (radioMonthly.isSelected() && comboBoxFilter.getValue() != null) {
+        if (pickerFilter.getValue() == null) {
+            tableAppointments.setItems(allAppointments);
+        } else if (radioMonthly.isSelected()) {
             filteredAppointments = FXCollections.observableArrayList(allAppointments.stream()
                     .filter(appointment -> appointment.getStartDateTime()
-                    .getMonth().toString()
-                    .equalsIgnoreCase(comboBoxFilter.getValue().toString())).collect(Collectors.toList()));
+                    .getMonthValue()
+                     == pickerFilter.getValue().getMonthValue() && appointment.getStartDateTime().getYear() == pickerFilter.getValue().getYear()).collect(Collectors.toList()));
 
 
             tableAppointments.setItems(filteredAppointments);
-        } else if (comboBoxFilter.getValue() != null) {
+
+        } else if (radioWeekly.isSelected()) {
             WeekFields localWeekFields = WeekFields.of(Locale.getDefault());
 
             filteredAppointments = FXCollections.observableArrayList(allAppointments.stream()
                     .filter(appointment -> appointment.getStartDateTime()
-                            .get(localWeekFields.weekOfYear()) == (Integer) comboBoxFilter.getValue()).collect(Collectors.toList()));
+                            .get(localWeekFields.weekOfYear()) == pickerFilter.getValue().get(localWeekFields.weekOfYear()) && appointment.getStartDateTime().getYear() == pickerFilter.getValue().getYear()).collect(Collectors.toList()));
 
             tableAppointments.setItems(filteredAppointments);
         }
+    }
+
+    @FXML
+    private void clearDate() {
+        pickerFilter.getEditor().clear();
+        tableAppointments.setItems(allAppointments);
     }
 
     @FXML
