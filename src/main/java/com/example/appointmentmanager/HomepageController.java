@@ -189,4 +189,9 @@ public class HomepageController {
             Utility.showError("No customer selected!", "Pleaese select a customer to delete.");
         }
     }
+
+    @FXML
+    private void switchToAddAppointment(ActionEvent event) throws IOException {
+        Utility.switchScene(event, "appointmentform.fxml");
+    }
 }

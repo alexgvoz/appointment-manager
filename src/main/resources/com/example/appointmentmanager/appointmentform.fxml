@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.appointmentmanager.AppointmentFormController">
+   <children>
+      <Label fx:id="labelCustomer" text="Add Appointment">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+         <padding>
+            <Insets bottom="70.0" />
+         </padding>
+      </Label>
+      <HBox alignment="CENTER_LEFT" prefWidth="200.0">
+         <children>
+            <Label text="ID:">
+               <padding>
+                  <Insets right="68.0" />
+               </padding>
+            </Label>
+            <TextField fx:id="fieldID" disable="true" prefHeight="30.0" />
+         </children>
+         <padding>
+            <Insets bottom="15.0" />
+         </padding>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" layoutX="60.0" layoutY="137.0" prefWidth="200.0">
+         <children>
+            <Label text="Title:">
+               <padding>
+                  <Insets right="58.0" />
+               </padding>
+            </Label>
+            <TextField fx:id="fieldTitle" prefHeight="30.0">
+               <HBox.margin>
+                  <Insets right="30.0" />
+               </HBox.margin></TextField>
+            <Label fx:id="labelTitle" />
+         </children>
+         <padding>
+            <Insets bottom="15.0" />
+         </padding>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" layoutX="60.0" layoutY="172.0" prefWidth="200.0">
+         <children>
+            <Label text="Description:" />
+            <TextField fx:id="fieldDescription" prefHeight="30.0">
+               <HBox.margin>
+                  <Insets left="21.0" right="30.0" />
+               </HBox.margin></TextField>
+            <Label fx:id="labelDescription" />
+         </children>
+         <padding>
+            <Insets bottom="15.0" />
+         </padding>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" layoutX="60.0" layoutY="207.0" prefWidth="200.0">
+         <children>
+            <Label text="Location:">
+               <padding>
+                  <Insets right="35.0" />
+               </padding>
+            </Label>
+            <TextField fx:id="fieldLocation" prefHeight="30.0">
+               <HBox.margin>
+                  <Insets right="30.0" />
+               </HBox.margin></TextField>
+            <Label fx:id="labelLocation" />
+         </children>
+         <padding>
+            <Insets bottom="15.0" />
+         </padding>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" layoutX="60.0" layoutY="242.0" prefWidth="200.0">
+         <children>
+            <Label text="Contact:">
+               <padding>
+                  <Insets right="39.0" />
+               </padding>
+            </Label>
+            <ComboBox fx:id="comboBoxContact" prefHeight="30.0" prefWidth="150.0" />
+            <Label fx:id="labelContact">
+               <HBox.margin>
+                  <Insets left="30.0" />
+               </HBox.margin></Label>
+         </children>
+         <padding>
+            <Insets bottom="10.0" />
+         </padding>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" layoutX="60.0" layoutY="202.0" prefWidth="200.0">
+         <children>
+            <Label text="Type:">
+               <padding>
+                  <Insets right="53.0" />
+               </padding>
+            </Label>
+            <TextField fx:id="fieldType" prefHeight="30.0">
+               <HBox.margin>
+                  <Insets right="30.0" />
+               </HBox.margin>
+            </TextField>
+            <Label fx:id="labelType" />
+         </children>
+         <padding>
+            <Insets bottom="15.0" />
+         </padding>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" prefWidth="200.0">
+         <children>
+            <Label text="Start Date:">
+               <padding>
+                  <Insets right="25.0" />
+               </padding>
+            </Label>
+            <DatePicker prefHeight="30.0" />
+            <Label layoutX="10.0" layoutY="15.0" text="Start Time:">
+               <padding>
+                  <Insets left="20.0" right="20.0" />
+               </padding>
+            </Label>
+            <TextField prefHeight="30.0" prefWidth="100.0">
+               <padding>
+                  <Insets right="20.0" />
+               </padding>
+            </TextField>
+            <ComboBox prefWidth="60.0">
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+            </ComboBox>
+            <Label fx:id="labelStartTime">
+               <HBox.margin>
+                  <Insets left="30.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+         <padding>
+            <Insets bottom="10.0" />
+         </padding>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" layoutX="60.0" layoutY="337.0" prefWidth="200.0">
+         <children>
+            <Label text="End Date:">
+               <padding>
+                  <Insets right="30.0" />
+               </padding></Label>
+            <DatePicker prefHeight="30.0" />
+            <Label layoutX="10.0" layoutY="15.0" text="End Time:">
+               <padding>
+                  <Insets left="20.0" right="25.0" />
+               </padding>
+            </Label>
+            <TextField prefHeight="30.0" prefWidth="100.0">
+               <padding>
+                  <Insets right="20.0" />
+               </padding>
+            </TextField>
+            <ComboBox prefWidth="60.0">
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+            </ComboBox>
+            <Label fx:id="labelEndTime">
+               <HBox.margin>
+                  <Insets left="30.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+      </HBox>
+      <HBox alignment="BOTTOM_RIGHT" prefHeight="163.0" prefWidth="1150.0">
+         <children>
+            <Button fx:id="buttonCustomer" layoutX="1090.0" layoutY="192.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="Add">
+               <HBox.margin>
+                  <Insets bottom="21.0" right="10.0" />
+               </HBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#switchToHomepage" prefHeight="30.0" prefWidth="60.0" text="Cancel">
+               <HBox.margin>
+                  <Insets bottom="21.0" right="10.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets left="50.0" top="50.0" />
+   </padding>
+</VBox>
