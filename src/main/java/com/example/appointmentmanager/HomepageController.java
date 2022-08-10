@@ -33,7 +33,7 @@ public class HomepageController {
     @FXML
     private RadioButton radioWeekly;
     @FXML
-    private Label labelMessages;
+    private Label labelCustomers;
     @FXML
     private DatePicker pickerFilter;
 
@@ -106,7 +106,6 @@ public class HomepageController {
 
             );
 
-            System.out.println(appointmentSet.getTimestamp("Start"));
             allAppointments.add(curAppointment);
         }
     }
@@ -183,7 +182,7 @@ public class HomepageController {
                 PreparedStatement ps = JDBC.connection.prepareStatement(sql);
                 ps.executeUpdate();
 
-                labelMessages.setText(tableCustomers.getSelectionModel().getSelectedItem().getName() + " has been deleted.");
+                labelCustomers.setText(tableCustomers.getSelectionModel().getSelectedItem().getName() + " has been deleted.");
                 allCustomers.remove(tableCustomers.getSelectionModel().getSelectedItem());
             }
         } else {

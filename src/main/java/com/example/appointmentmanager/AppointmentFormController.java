@@ -9,11 +9,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.format.DateTimeFormatter;
+import java.sql.Timestamp;
 import java.util.*;
 
 public class AppointmentFormController {
@@ -42,22 +41,26 @@ public class AppointmentFormController {
     @FXML
     private Label labelType;
     @FXML
-    private TextField fieldUser;
+    private ComboBox<Integer> comboBoxUsers;
     @FXML
-    private TextField fieldCustomer;
-    @FXML
-    private Label labelUser;
-    @FXML
-    private Label labelCustomer;
+    private ComboBox<Integer> comboBoxCustomers;
     @FXML
     private Label labelAppointment;
     @FXML
     private Button buttonAppointment;
+    @FXML
+    private Spinner<Integer> spinnerStartHour;
+    @FXML
+    private Spinner<Integer> spinnerStartMinute;
+    @FXML
+    private Spinner<Integer> spinnerEndHour;
+    @FXML
+    private Spinner<Integer> spinnerEndMinute;
 
     private static Appointment appointment = null;
     private Map<String, Integer> contactList = new HashMap<>();
-    private List listUsers = new ArrayList();
-    private List listCustomers = new ArrayList();
+    private ObservableList<Integer> listUsers = FXCollections.observableArrayList();
+    private ObservableList<Integer> listCustomers = FXCollections.observableArrayList();
 
     @FXML
     private void initialize() throws SQLException {
@@ -65,7 +68,11 @@ public class AppointmentFormController {
         getUsers();
         getCustomers();
 
+        spinnerHandler();
+
         if (appointment != null) {
+            System.out.println(appointment.getUserID());
+            System.out.println(appointment.getCustomerID());
             labelAppointment.setText("Edit Appointment");
             buttonAppointment.setText("Save");
             fieldID.setText(String.valueOf(appointment.getId()));
@@ -74,7 +81,14 @@ public class AppointmentFormController {
             fieldLocation.setText(appointment.getLocation());
             fieldType.setText(appointment.getType());
             comboBoxContact.getSelectionModel().select(appointment.getContact());
+            comboBoxUsers.getSelectionModel().select((Integer) appointment.getUserID());
+            comboBoxCustomers.getSelectionModel().select((Integer) appointment.getCustomerID());
             pickerStartDate.setValue(appointment.getStartDateTime().toLocalDate());
+            spinnerStartHour.getValueFactory().setValue(appointment.getStartDateTime().toLocalTime().getHour());
+            spinnerStartMinute.getValueFactory().setValue(appointment.getStartDateTime().toLocalTime().getMinute());
+            pickerEndDate.setValue(appointment.getStartDateTime().toLocalDate());
+            spinnerEndHour.getValueFactory().setValue(appointment.getEndDateTime().toLocalTime().getHour());
+            spinnerEndMinute.getValueFactory().setValue(appointment.getEndDateTime().toLocalTime().getMinute());
 
         } else {
             fieldID.setText(String.valueOf(getNextID()));
@@ -82,8 +96,22 @@ public class AppointmentFormController {
             pickerEndDate.setValue(java.time.LocalDate.now());
 
         }
+    }
 
-        System.out.println(pickerStartDate.getValue().toString());
+    private void spinnerHandler() {
+        var hourStartFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 24, 12);
+        hourStartFactory.setWrapAround(true);
+        var hourEndFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 24, 12);
+        hourEndFactory.setWrapAround(true);
+        var minuteStartFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(00, 59, 00);
+        minuteStartFactory.setWrapAround(true);
+        var minuteEndFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(00, 59, 00);
+        minuteEndFactory.setWrapAround(true);
+
+        spinnerStartHour.setValueFactory(hourStartFactory);
+        spinnerEndHour.setValueFactory(hourEndFactory);
+        spinnerStartMinute.setValueFactory(minuteStartFactory);
+        spinnerEndMinute.setValueFactory(minuteEndFactory);
     }
 
     public void setAppointment(Appointment appointment) { this.appointment = appointment;}
@@ -110,6 +138,9 @@ public class AppointmentFormController {
         while (users.next()) {
             listUsers.add(users.getInt(1));
         }
+
+        comboBoxUsers.setItems(listUsers.sorted());
+        comboBoxUsers.getSelectionModel().selectFirst();
     }
 
     private void getCustomers() throws SQLException {
@@ -121,8 +152,12 @@ public class AppointmentFormController {
         while (customers.next()) {
             listCustomers.add(customers.getInt(1));
         }
+
+        comboBoxCustomers.setItems(listCustomers.sorted());
+        comboBoxCustomers.getSelectionModel().selectFirst();
     }
 
+    @FXML
     private void handleAppointment(ActionEvent event) throws SQLException, IOException {
         Integer errors = 0;
 
@@ -150,32 +185,33 @@ public class AppointmentFormController {
         } else {
             labelType.setText("");
         }
-        if (Utility.checkField(fieldUser)){
-            labelUser.setText("Title field can't be empty.");
-            errors += 1;
-        } else {
-            labelUser.setText("");
-        }
-        if (Utility.checkField(fieldCustomer)){
-            labelCustomer.setText("Title field can't be empty.");
-            errors += 1;
-        } else {
-            labelCustomer.setText("");
-        }
 
         if (errors == 0) {
             if (appointment != null) {
-//                String sql = "UPDATE customers " +
-//                        String.format("SET Customer_Name='%s', Address='%s', Phone='%s', Postal_Code='%s', Division_ID=%d ", fieldName.getText(), fieldAddress.getText(), fieldPhone.getText(), fieldPostal.getText(), divisionList.get(comboBoxDivision.getValue())) +
-//                        String.format("WHERE Customer_ID=%d", Integer.parseInt(fieldID.getText()));
-//                PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-//                ps.executeUpdate();
-//
-//                customer = null;
-//                Utility.switchScene(event, "homepage.fxml");
+                Timestamp startTS = Timestamp.valueOf(pickerStartDate.getValue().atTime(spinnerStartHour.getValue(),spinnerStartMinute.getValue()));
+                Timestamp endTS = Timestamp.valueOf(pickerEndDate.getValue().atTime(spinnerEndHour.getValue(), spinnerEndMinute.getValue()));
+
+                String sql = "UPDATE appointments " +
+                        "SET Title=?, Description=?, Location=?, Type=?, Start=?, End=?, Customer_ID=?, User_ID=?, Contact_ID=? " +
+                        "WHERE Appointment_ID=?";
+                PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+                ps.setString(1, fieldTitle.getText());
+                ps.setString(2, fieldDescription.getText());
+                ps.setString(3, fieldLocation.getText());
+                ps.setString(4, fieldType.getText());
+                ps.setTimestamp(5, startTS);
+                ps.setTimestamp(6, endTS);
+                ps.setInt(7, comboBoxCustomers.getValue());
+                ps.setInt(8, comboBoxUsers.getValue());
+                ps.setInt(9, contactList.get(comboBoxContact.getValue()));
+                ps.setInt(10, Integer.parseInt(fieldID.getText()));
+
+                ps.executeUpdate();
+
+                Utility.switchScene(event, "homepage.fxml");
             } else {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss.SSS", Locale.getDefault());
-                String startDateTime = pickerStartDate.getValue().toString() + " "; // TODO: 8/9/2022 Convert to localdatetime
+                Timestamp startTS = Timestamp.valueOf(pickerStartDate.getValue().atTime(spinnerStartHour.getValue(),spinnerStartMinute.getValue()));
+                Timestamp endTS = Timestamp.valueOf(pickerEndDate.getValue().atTime(spinnerEndHour.getValue(), spinnerEndMinute.getValue()));
 
                 String sql = "INSERT INTO appointments (Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID) " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -184,7 +220,11 @@ public class AppointmentFormController {
                 ps.setString(2, fieldDescription.getText());
                 ps.setString(3, fieldLocation.getText());
                 ps.setString(4, fieldType.getText());
-                //ps.setTimestamp(5, );
+                ps.setTimestamp(5, startTS);
+                ps.setTimestamp(6, endTS);
+                ps.setInt(7, comboBoxCustomers.getValue());
+                ps.setInt(8, comboBoxUsers.getValue());
+                ps.setInt(9, contactList.get(comboBoxContact.getValue()));
 
                 ps.executeUpdate();
 
@@ -204,13 +244,8 @@ public class AppointmentFormController {
             contactList.put(contacts.getString(2), contacts.getInt(1));
         }
 
-        comboBoxContact.setItems(FXCollections.observableArrayList(contactList.keySet()));
-
-        if (appointment != null) {
-            // TODO: 8/8/2022 Select appointment's contact
-        } else {
-            comboBoxContact.getSelectionModel().selectFirst();
-        }
+        comboBoxContact.setItems(FXCollections.observableArrayList(contactList.keySet()).sorted());
+        comboBoxContact.getSelectionModel().selectFirst();
     }
 
     @FXML

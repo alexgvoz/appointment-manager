@@ -96,7 +96,7 @@ public class CustomerFormController {
             countryList.put(countryData.getString(2), countryData.getInt(1));
         }
 
-        comboBoxCountry.setItems(FXCollections.observableArrayList(countryList.keySet()));
+        comboBoxCountry.setItems(FXCollections.observableArrayList(countryList.keySet()).sorted());
         comboBoxCountry.getSelectionModel().selectFirst();
         getDivisions();
     }
@@ -117,7 +117,7 @@ public class CustomerFormController {
            }
        }
 
-       comboBoxDivision.setItems(FXCollections.observableArrayList(divisionList.keySet()));
+       comboBoxDivision.setItems(FXCollections.observableArrayList(divisionList.keySet()).sorted());
        comboBoxDivision.getSelectionModel().selectFirst();
    }
 

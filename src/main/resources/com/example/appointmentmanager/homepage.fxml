@@ -27,9 +27,9 @@
                               <TableColumn prefWidth="57.0" text="User ID" />
                           </columns>
                         </TableView>
-                        <Button layoutX="1060.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="Edit" />
+                        <Button layoutX="1060.0" layoutY="520.0" mnemonicParsing="false" onAction="#switchToEditAppointment" prefHeight="30.0" prefWidth="60.0" text="Edit" />
                         <Button layoutX="990.0" layoutY="520.0" mnemonicParsing="false" onAction="#switchToAddAppointment" prefHeight="30.0" prefWidth="60.0" text="Add" />
-                        <RadioButton fx:id="radioMonthly" layoutX="729.0" layoutY="527.0" mnemonicParsing="false" selected="true" text="Monthly">
+                        <RadioButton fx:id="radioMonthly" layoutX="729.0" layoutY="527.0" mnemonicParsing="false" onAction="#filterAppointments" selected="true" text="Monthly">
                            <toggleGroup>
                               <ToggleGroup fx:id="groupFilters" />
                            </toggleGroup>
