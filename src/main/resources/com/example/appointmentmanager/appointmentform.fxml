@@ -7,7 +7,7 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.appointmentmanager.AppointmentFormController">
    <children>
-      <Label fx:id="labelCustomer" text="Add Appointment">
+      <Label fx:id="labelAppointment" text="Add Appointment">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
@@ -110,6 +110,42 @@
             <Insets bottom="15.0" />
          </padding>
       </HBox>
+      <HBox alignment="CENTER_LEFT" layoutX="60.0" layoutY="352.0" prefWidth="200.0">
+         <children>
+            <Label text="User ID:">
+               <padding>
+                  <Insets right="39.0" />
+               </padding>
+            </Label>
+            <TextField fx:id="fieldUser" prefHeight="30.0">
+               <HBox.margin>
+                  <Insets right="30.0" />
+               </HBox.margin>
+            </TextField>
+            <Label fx:id="labelUser" />
+         </children>
+         <padding>
+            <Insets bottom="15.0" />
+         </padding>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" layoutX="60.0" layoutY="392.0" prefWidth="200.0">
+         <children>
+            <Label text="Customer ID:">
+               <padding>
+                  <Insets right="11.0" />
+               </padding>
+            </Label>
+            <TextField fx:id="fieldCustomer" prefHeight="30.0">
+               <HBox.margin>
+                  <Insets right="30.0" />
+               </HBox.margin>
+            </TextField>
+            <Label fx:id="labelCustomer" />
+         </children>
+         <padding>
+            <Insets bottom="15.0" />
+         </padding>
+      </HBox>
       <HBox alignment="CENTER_LEFT" prefWidth="200.0">
          <children>
             <Label text="Start Date:">
@@ -117,22 +153,17 @@
                   <Insets right="25.0" />
                </padding>
             </Label>
-            <DatePicker prefHeight="30.0" />
+            <DatePicker fx:id="pickerStartDate" editable="false" prefHeight="30.0" />
             <Label layoutX="10.0" layoutY="15.0" text="Start Time:">
                <padding>
                   <Insets left="20.0" right="20.0" />
                </padding>
             </Label>
-            <TextField prefHeight="30.0" prefWidth="100.0">
-               <padding>
-                  <Insets right="20.0" />
-               </padding>
-            </TextField>
-            <ComboBox prefWidth="60.0">
+            <Spinner fx:id="spinnerStartHour" prefWidth="70.0">
                <HBox.margin>
-                  <Insets left="20.0" />
-               </HBox.margin>
-            </ComboBox>
+                  <Insets right="20.0" />
+               </HBox.margin></Spinner>
+            <Spinner fx:id="spinnerStartMinute" layoutX="364.0" layoutY="10.0" prefWidth="70.0" />
             <Label fx:id="labelStartTime">
                <HBox.margin>
                   <Insets left="30.0" />
@@ -149,22 +180,17 @@
                <padding>
                   <Insets right="30.0" />
                </padding></Label>
-            <DatePicker prefHeight="30.0" />
+            <DatePicker fx:id="pickerEndDate" editable="false" prefHeight="30.0" />
             <Label layoutX="10.0" layoutY="15.0" text="End Time:">
                <padding>
                   <Insets left="20.0" right="25.0" />
                </padding>
             </Label>
-            <TextField prefHeight="30.0" prefWidth="100.0">
-               <padding>
-                  <Insets right="20.0" />
-               </padding>
-            </TextField>
-            <ComboBox prefWidth="60.0">
+            <Spinner fx:id="spinnerEndHour" prefWidth="70.0">
                <HBox.margin>
-                  <Insets left="20.0" />
-               </HBox.margin>
-            </ComboBox>
+                  <Insets right="20.0" />
+               </HBox.margin></Spinner>
+            <Spinner fx:id="spinnerEndMinute" prefWidth="70.0" />
             <Label fx:id="labelEndTime">
                <HBox.margin>
                   <Insets left="30.0" />
@@ -174,7 +200,7 @@
       </HBox>
       <HBox alignment="BOTTOM_RIGHT" prefHeight="163.0" prefWidth="1150.0">
          <children>
-            <Button fx:id="buttonCustomer" layoutX="1090.0" layoutY="192.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="Add">
+            <Button fx:id="buttonAppointment" layoutX="1090.0" layoutY="192.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="Add">
                <HBox.margin>
                   <Insets bottom="21.0" right="10.0" />
                </HBox.margin>

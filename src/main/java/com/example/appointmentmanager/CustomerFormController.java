@@ -142,25 +142,25 @@ public class CustomerFormController {
         Integer errors = 0;
 
         if (Utility.checkField(fieldName)){
-            labelName.setText(String.format("Name field can't be empty."));
+            labelName.setText("Name field can't be empty.");
             errors += 1;
         } else {
             labelName.setText("");
         }
         if (Utility.checkField(fieldPhone)) {
-            labelPhone.setText(String.format("Phone field can't be empty."));
+            labelPhone.setText("Phone field can't be empty.");
             errors += 1;
         } else {
             labelPhone.setText("");
         }
         if (Utility.checkField(fieldAddress)) {
-            labelAddress.setText(String.format("Address field can't be empty."));
+            labelAddress.setText("Address field can't be empty.");
             errors += 1;
         } else {
             labelAddress.setText("");
         }
         if (Utility.checkField(fieldPostal)) {
-            labelPostal.setText(String.format("Postal code field can't be empty."));
+            labelPostal.setText("Postal code field can't be empty.");
             errors += 1;
         } else {
             labelPostal.setText("");

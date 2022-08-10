@@ -23,7 +23,7 @@ public class Appointment {
 
     public Appointment(int id, String title, String description, String location, String contact, String type, int customerID, int userID, LocalDateTime start, LocalDateTime end) {
         DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("LLL dd u");
-        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("h:mm a");
+        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("k:mm");
 
         this.id = id;
         this.title = title;

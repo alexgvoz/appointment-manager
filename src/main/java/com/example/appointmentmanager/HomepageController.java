@@ -106,6 +106,7 @@ public class HomepageController {
 
             );
 
+            System.out.println(appointmentSet.getTimestamp("Start"));
             allAppointments.add(curAppointment);
         }
     }
@@ -193,5 +194,15 @@ public class HomepageController {
     @FXML
     private void switchToAddAppointment(ActionEvent event) throws IOException {
         Utility.switchScene(event, "appointmentform.fxml");
+    }
+
+    @FXML
+    private void switchToEditAppointment(ActionEvent event) throws IOException {
+        if (tableAppointments.getSelectionModel().getSelectedItem() != null) {
+            new AppointmentFormController().setAppointment(tableAppointments.getSelectionModel().getSelectedItem());
+            Utility.switchScene(event, "appointmentform.fxml");
+        } else {
+            Utility.showError("No appointment selected", "Pleaese select an appointment to edit.");
+        }
     }
 }
