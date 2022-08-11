@@ -169,17 +169,28 @@ public class CustomerFormController {
         if (errors == 0) {
             if (customer != null) {
                 String sql = "UPDATE customers " +
-                        String.format("SET Customer_Name='%s', Address='%s', Phone='%s', Postal_Code='%s', Division_ID=%d ", fieldName.getText(), fieldAddress.getText(), fieldPhone.getText(), fieldPostal.getText(), divisionList.get(comboBoxDivision.getValue())) +
-                        String.format("WHERE Customer_ID=%d", Integer.parseInt(fieldID.getText()));
+                        "SET Customer_Name=?, Address=?, Phone=?, Postal_Code=?, Division_ID=? " +
+                        "WHERE Customer_ID=?";
                 PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+                ps.setString(1, fieldName.getText());
+                ps.setString(2, fieldAddress.getText());
+                ps.setString(3, fieldPhone.getText());
+                ps.setString(4, fieldPostal.getText());
+                ps.setInt(5, divisionList.get(comboBoxDivision.getValue()));
+                ps.setInt(6, Integer.parseInt(fieldID.getText()));
                 ps.executeUpdate();
 
                 customer = null;
                 Utility.switchScene(event, "homepage.fxml");
             } else {
                 String sql = "INSERT INTO customers (Customer_Name, Address, Phone, Postal_Code, Division_ID) " +
-                        String.format("VALUES ('%s', '%s', '%s', '%s', %d)", fieldName.getText(), fieldAddress.getText(), fieldPhone.getText(), fieldPostal.getText(), divisionList.get(comboBoxDivision.getValue()));
+                        "VALUES (?, ?, ?, ?, ?)";
                 PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+                ps.setString(1, fieldName.getText());
+                ps.setString(2, fieldAddress.getText());
+                ps.setString(3, fieldPhone.getText());
+                ps.setString(4, fieldPostal.getText());
+                ps.setInt(5, divisionList.get(comboBoxDivision.getValue()));
                 ps.executeUpdate();
 
                 Utility.switchScene(event, "homepage.fxml");

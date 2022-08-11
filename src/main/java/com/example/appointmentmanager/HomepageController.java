@@ -35,6 +35,8 @@ public class HomepageController {
     @FXML
     private Label labelCustomers;
     @FXML
+    private Label labelAppointments;
+    @FXML
     private DatePicker pickerFilter;
 
     private ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
@@ -48,9 +50,6 @@ public class HomepageController {
 
         setCustomerColumns();
         setAppointmentColumns();
-
-        tableAppointments.setItems(allAppointments);
-
     }
 
     private void getCustomers() throws SQLException {
@@ -124,6 +123,7 @@ public class HomepageController {
         Utility.setColumnValue(tableAppointments, 10, "customerID");
         Utility.setColumnValue(tableAppointments, 11, "userID");
 
+        tableAppointments.setItems(allAppointments);
         tableAppointments.getSortOrder().add(tableAppointments.getColumns().get(0));
     }
 
@@ -131,6 +131,7 @@ public class HomepageController {
     private void filterAppointments() {
         if (pickerFilter.getValue() == null) {
             tableAppointments.setItems(allAppointments);
+            tableAppointments.getSortOrder().add(tableAppointments.getColumns().get(0));
         } else if (radioMonthly.isSelected()) {
             filteredAppointments = FXCollections.observableArrayList(allAppointments.stream()
                     .filter(appointment -> appointment.getStartDateTime()
@@ -139,6 +140,7 @@ public class HomepageController {
 
 
             tableAppointments.setItems(filteredAppointments);
+            tableAppointments.getSortOrder().add(tableAppointments.getColumns().get(0));
 
         } else if (radioWeekly.isSelected()) {
             WeekFields localWeekFields = WeekFields.of(Locale.getDefault());
@@ -148,6 +150,7 @@ public class HomepageController {
                             .get(localWeekFields.weekOfYear()) == pickerFilter.getValue().get(localWeekFields.weekOfYear()) && appointment.getStartDateTime().getYear() == pickerFilter.getValue().getYear()).collect(Collectors.toList()));
 
             tableAppointments.setItems(filteredAppointments);
+            tableAppointments.getSortOrder().add(tableAppointments.getColumns().get(0));
         }
     }
 
@@ -173,13 +176,13 @@ public class HomepageController {
     }
 
     @FXML
-
     private void deleteCustomer(ActionEvent event) throws IOException, SQLException {
         if (tableCustomers.getSelectionModel().getSelectedItem() != null) {
             if (Utility.showConfirm("Are you sure you want to delete this customer?", "Deleting a customer will also delete all appointments associated with them.")) {
                 String sql = "DELETE FROM customers " +
-                        String.format("WHERE Customer_ID=%d", tableCustomers.getSelectionModel().getSelectedItem().getId());
+                        "WHERE Customer_ID=?";
                 PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+                ps.setInt(1, tableCustomers.getSelectionModel().getSelectedItem().getId());
                 ps.executeUpdate();
 
                 labelCustomers.setText(tableCustomers.getSelectionModel().getSelectedItem().getName() + " has been deleted.");
@@ -202,6 +205,24 @@ public class HomepageController {
             Utility.switchScene(event, "appointmentform.fxml");
         } else {
             Utility.showError("No appointment selected", "Pleaese select an appointment to edit.");
+        }
+    }
+
+    @FXML
+    private void deleteAppointment(ActionEvent event) throws IOException, SQLException {
+        if (tableAppointments.getSelectionModel().getSelectedItem() != null) {
+            if (Utility.showConfirm("Are you sure you want to delete this appointment?", "")) {
+                String sql = "DELETE FROM appointments " +
+                        "WHERE Appointment_ID=?";
+                PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+                ps.setInt(1,tableAppointments.getSelectionModel().getSelectedItem().getId());
+                ps.executeUpdate();
+
+                labelAppointments.setText(tableAppointments.getSelectionModel().getSelectedItem().getTitle() + " appointment has been deleted.");
+                allAppointments.remove(tableAppointments.getSelectionModel().getSelectedItem());
+            }
+        } else {
+            Utility.showError("No appointment selected!", "Pleaese select an appointment to delete.");
         }
     }
 }

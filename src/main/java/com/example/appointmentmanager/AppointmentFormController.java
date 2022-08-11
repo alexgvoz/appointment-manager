@@ -13,6 +13,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 public class AppointmentFormController {
@@ -40,6 +42,10 @@ public class AppointmentFormController {
     private Label labelLocation;
     @FXML
     private Label labelType;
+    @FXML
+    private Label labelStartTime;
+    @FXML
+    private Label labelEndTime;
     @FXML
     private ComboBox<Integer> comboBoxUsers;
     @FXML
@@ -174,17 +180,48 @@ public class AppointmentFormController {
             labelDescription.setText("");
         }
         if (Utility.checkField(fieldLocation)){
-            labelLocation.setText("Title field can't be empty.");
+            labelLocation.setText("Location field can't be empty.");
             errors += 1;
         } else {
             labelLocation.setText("");
         }
         if (Utility.checkField(fieldType)){
-            labelType.setText("Title field can't be empty.");
+            labelType.setText("Type field can't be empty.");
             errors += 1;
         } else {
             labelType.setText("");
         }
+        if (pickerStartDate.getValue().isBefore(LocalDate.now())) {
+            labelStartTime.setText("Start date can't be before today's date.");
+            errors += 1;
+        } else {
+            labelType.setText("");
+        }
+        if (pickerStartDate.getValue().isEqual(LocalDate.now()) && LocalTime.of(spinnerStartHour.getValue(), spinnerStartMinute.getValue()).isBefore(LocalTime.now())) {
+            labelStartTime.setText("Start time can't be in the past.");
+            errors += 1;
+        } else {
+            labelType.setText("");
+        }
+        if (pickerEndDate.getValue().isBefore(pickerStartDate.getValue())) {
+            labelEndTime.setText("End date can't be before start date.");
+            errors += 1;
+        } else {
+            labelType.setText("");
+        }
+        if (pickerStartDate.getValue().equals(pickerEndDate.getValue()) && LocalTime.of(spinnerStartHour.getValue(), spinnerStartMinute.getValue()).isAfter(LocalTime.of(spinnerEndHour.getValue(), spinnerEndMinute.getValue()))) {
+            labelEndTime.setText("End time can't be before start time.");
+            errors += 1;
+        } else {
+            labelType.setText("");
+        }
+        if (pickerStartDate.getValue().equals(pickerEndDate.getValue()) && LocalTime.of(spinnerStartHour.getValue(), spinnerStartMinute.getValue()).equals(LocalTime.of(spinnerEndHour.getValue(), spinnerEndMinute.getValue()))) {
+            labelEndTime.setText("End and start time can't be the same.");
+            errors += 1;
+        } else {
+            labelType.setText("");
+        }
+        // TODO: 8/10/2022 Add check for business hours and appointment overlap 
 
         if (errors == 0) {
             if (appointment != null) {

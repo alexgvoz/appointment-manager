@@ -34,8 +34,8 @@
                               <ToggleGroup fx:id="groupFilters" />
                            </toggleGroup>
                         </RadioButton>
-                        <RadioButton fx:id="radioWeekly" layoutX="805.0" layoutY="527.0" mnemonicParsing="false" text="Weekly" toggleGroup="$groupFilters" />
-                        <Button layoutX="1130.0" layoutY="520.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="Delete" />
+                        <RadioButton fx:id="radioWeekly" layoutX="805.0" layoutY="527.0" mnemonicParsing="false" onAction="#filterAppointments" text="Weekly" toggleGroup="$groupFilters" />
+                        <Button layoutX="1130.0" layoutY="520.0" mnemonicParsing="false" onAction="#deleteAppointment" prefHeight="30.0" prefWidth="60.0" text="Delete" />
                         <DatePicker fx:id="pickerFilter" editable="false" layoutX="513.0" layoutY="520.0" onAction="#filterAppointments" prefHeight="30.0" showWeekNumbers="true" />
                         <Button layoutX="689.0" layoutY="520.0" mnemonicParsing="false" onAction="#clearDate" prefHeight="30.0" prefWidth="30.0" text="C" />
                         <Label fx:id="labelAppointments" layoutX="10.0" layoutY="527.0" />
