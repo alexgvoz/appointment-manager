@@ -13,8 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.*;
 
 public class AppointmentFormController {
@@ -105,13 +104,13 @@ public class AppointmentFormController {
     }
 
     private void spinnerHandler() {
-        var hourStartFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 24, 12);
+        var hourStartFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 12);
         hourStartFactory.setWrapAround(true);
-        var hourEndFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 24, 12);
+        var hourEndFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 12);
         hourEndFactory.setWrapAround(true);
-        var minuteStartFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(00, 59, 00);
+        var minuteStartFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, 0);
         minuteStartFactory.setWrapAround(true);
-        var minuteEndFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(00, 59, 00);
+        var minuteEndFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, 0);
         minuteEndFactory.setWrapAround(true);
 
         spinnerStartHour.setValueFactory(hourStartFactory);
@@ -166,6 +165,12 @@ public class AppointmentFormController {
     @FXML
     private void handleAppointment(ActionEvent event) throws SQLException, IOException {
         Integer errors = 0;
+        Timestamp startTS = Timestamp.valueOf(pickerStartDate.getValue().atTime(spinnerStartHour.getValue(),spinnerStartMinute.getValue()));
+        Timestamp endTS = Timestamp.valueOf(pickerEndDate.getValue().atTime(spinnerEndHour.getValue(), spinnerEndMinute.getValue()));
+        LocalTime startTime = LocalTime.of(spinnerStartHour.getValue(), spinnerStartMinute.getValue());
+        LocalTime endTime = LocalTime.of(spinnerEndHour.getValue(), spinnerEndMinute.getValue());
+        LocalTime dayStart = ZonedDateTime.of(pickerStartDate.getValue().atTime(8,0), ZoneId.of("America/New_York")).withZoneSameInstant(ZoneId.systemDefault()).toLocalTime();
+        LocalTime dayEnd = ZonedDateTime.of(pickerStartDate.getValue().atTime(22,0), ZoneId.of("America/New_York")).withZoneSameInstant(ZoneId.systemDefault()).toLocalTime();
 
         if (Utility.checkField(fieldTitle)){
             labelTitle.setText("Title field can't be empty.");
@@ -194,40 +199,49 @@ public class AppointmentFormController {
         if (pickerStartDate.getValue().isBefore(LocalDate.now())) {
             labelStartTime.setText("Start date can't be before today's date.");
             errors += 1;
-        } else {
-            labelType.setText("");
-        }
-        if (pickerStartDate.getValue().isEqual(LocalDate.now()) && LocalTime.of(spinnerStartHour.getValue(), spinnerStartMinute.getValue()).isBefore(LocalTime.now())) {
+        } else if (pickerStartDate.getValue().isAfter(pickerEndDate.getValue())) {
+            labelStartTime.setText("Start date can't be after end date.");
+            errors += 1;
+        } else if (pickerStartDate.getValue().isEqual(LocalDate.now()) && startTime.isBefore(LocalTime.now())) {
             labelStartTime.setText("Start time can't be in the past.");
+            System.out.println(startTime);
+            System.out.println(LocalTime.now());
+            errors += 1;
+        } else if (startTime.isBefore(dayStart) || startTime.isAfter(dayEnd)) {
+            labelStartTime.setText("Start time is outside of business hours (8am - 10pm EST).");
             errors += 1;
         } else {
-            labelType.setText("");
+            labelStartTime.setText("");
         }
         if (pickerEndDate.getValue().isBefore(pickerStartDate.getValue())) {
             labelEndTime.setText("End date can't be before start date.");
             errors += 1;
-        } else {
-            labelType.setText("");
-        }
-        if (pickerStartDate.getValue().equals(pickerEndDate.getValue()) && LocalTime.of(spinnerStartHour.getValue(), spinnerStartMinute.getValue()).isAfter(LocalTime.of(spinnerEndHour.getValue(), spinnerEndMinute.getValue()))) {
+        } else if (pickerStartDate.getValue().equals(pickerEndDate.getValue()) && startTime.isAfter(endTime)) {
             labelEndTime.setText("End time can't be before start time.");
             errors += 1;
-        } else {
-            labelType.setText("");
-        }
-        if (pickerStartDate.getValue().equals(pickerEndDate.getValue()) && LocalTime.of(spinnerStartHour.getValue(), spinnerStartMinute.getValue()).equals(LocalTime.of(spinnerEndHour.getValue(), spinnerEndMinute.getValue()))) {
+        } else if (pickerStartDate.getValue().equals(pickerEndDate.getValue()) && startTime.equals(endTime)) {
             labelEndTime.setText("End and start time can't be the same.");
             errors += 1;
+        } else if (endTime.isBefore(dayStart) || startTime.isAfter(dayEnd)) {
+            labelEndTime.setText("End time is outside of business hours (8am - 10pm EST).");
+            errors += 1;
         } else {
-            labelType.setText("");
+            labelEndTime.setText("");
         }
-        // TODO: 8/10/2022 Add check for business hours and appointment overlap 
+
+        if (errors == 0) {
+            String sql = "SELECT Appointment_ID, Title, Start, End " +
+                    "FROM appointments " +
+                    "WHERE Customer_ID=?";
+            PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+            ps.setInt(1, comboBoxCustomers.getValue());
+            ResultSet customerAppointments = ps.executeQuery();
+
+
+        }
 
         if (errors == 0) {
             if (appointment != null) {
-                Timestamp startTS = Timestamp.valueOf(pickerStartDate.getValue().atTime(spinnerStartHour.getValue(),spinnerStartMinute.getValue()));
-                Timestamp endTS = Timestamp.valueOf(pickerEndDate.getValue().atTime(spinnerEndHour.getValue(), spinnerEndMinute.getValue()));
-
                 String sql = "UPDATE appointments " +
                         "SET Title=?, Description=?, Location=?, Type=?, Start=?, End=?, Customer_ID=?, User_ID=?, Contact_ID=? " +
                         "WHERE Appointment_ID=?";
@@ -247,9 +261,6 @@ public class AppointmentFormController {
 
                 Utility.switchScene(event, "homepage.fxml");
             } else {
-                Timestamp startTS = Timestamp.valueOf(pickerStartDate.getValue().atTime(spinnerStartHour.getValue(),spinnerStartMinute.getValue()));
-                Timestamp endTS = Timestamp.valueOf(pickerEndDate.getValue().atTime(spinnerEndHour.getValue(), spinnerEndMinute.getValue()));
-
                 String sql = "INSERT INTO appointments (Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID) " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 PreparedStatement ps = JDBC.connection.prepareStatement(sql);

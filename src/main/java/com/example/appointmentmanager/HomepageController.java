@@ -2,20 +2,24 @@ package com.example.appointmentmanager;
 
 import helper.JDBC;
 import helper.Utility;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.temporal.WeekFields;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class HomepageController {
@@ -42,14 +46,40 @@ public class HomepageController {
     private ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
     private ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
     private ObservableList<Appointment> filteredAppointments = FXCollections.observableArrayList();
+    private ObservableList<Appointment> upcomingAppointments = FXCollections.observableArrayList();
+    private static boolean fromLogin = false;
 
     @FXML
-    private void initialize() throws SQLException {
+    private void initialize() throws SQLException, InterruptedException {
         getCustomers();
         getAppointments();
 
         setCustomerColumns();
         setAppointmentColumns();
+
+        if (fromLogin) {
+            Platform.runLater(() -> showUpcomingAppointments());
+            fromLogin = false;
+        }
+    }
+
+    public void setFromLogin(boolean fromLogin) {this.fromLogin = fromLogin;}
+
+    public void showUpcomingAppointments() {
+        if (!upcomingAppointments.isEmpty()) {
+            for (Appointment appointment : upcomingAppointments) {
+                String title = "Upcoming Appointment";
+                String body = "Appointment " +
+                        appointment.getTitle() +
+                        " is at " +
+                        appointment.getStartTime() +
+                        " on " + appointment.getStartDate() + "!";
+
+                Utility.showError(title, body);
+            }
+        } else {
+            labelAppointments.setText("No upcoming appointments.");
+        }
     }
 
     private void getCustomers() throws SQLException {
@@ -105,6 +135,10 @@ public class HomepageController {
 
             );
 
+            if (appointmentSet.getTimestamp("Start").toLocalDateTime().isAfter(LocalDateTime.now()) && appointmentSet.getTimestamp("Start").toLocalDateTime().isBefore(LocalDateTime.now().plusMinutes(15))) {
+                upcomingAppointments.add(curAppointment);
+            }
+
             allAppointments.add(curAppointment);
         }
     }
@@ -156,7 +190,7 @@ public class HomepageController {
 
     @FXML
     private void clearDate() {
-        pickerFilter.getEditor().clear();
+        pickerFilter.setValue(null);
         tableAppointments.setItems(allAppointments);
     }
 

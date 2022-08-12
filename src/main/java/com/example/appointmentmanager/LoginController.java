@@ -51,6 +51,7 @@ public class LoginController {
             String userPassword = user.getString("Password");
             if (userPassword.equals(enteredPassword)) {
                 logLoginAttempt(enteredUsername, true);
+                new HomepageController().setFromLogin(true);
                 Utility.switchScene(event, "homepage.fxml");
             } else {
                 Utility.showError(localetext.getString("loginFailedTitle"),localetext.getString("loginFail"));
