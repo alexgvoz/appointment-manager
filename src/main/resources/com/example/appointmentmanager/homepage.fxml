@@ -64,6 +64,29 @@
                   </AnchorPane>
             </content>
           </Tab>
+          <Tab closable="false" text="Reports">
+              <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                      <children>
+                          <TableView layoutX="10.0" layoutY="10.0" prefHeight="500.0" prefWidth="1180.0">
+                              <columns>
+                                  <TableColumn prefWidth="45.0" text="ID" />
+                                  <TableColumn prefWidth="190.0" text="Name" />
+                                  <TableColumn minWidth="0.0" prefWidth="225.0" text="Phone" />
+                                  <TableColumn minWidth="0.0" prefWidth="165.0" text="Division ID" />
+                                  <TableColumn prefWidth="300.0" text="Address" />
+                                  <TableColumn prefWidth="253.0" text="Postal Code" />
+                              </columns>
+                          </TableView>
+                          <Button layoutX="1060.0" layoutY="520.0" mnemonicParsing="false" onAction="#switchToEditCustomer" prefHeight="30.0" prefWidth="60.0" text="Edit" />
+                          <Button layoutX="990.0" layoutY="520.0" mnemonicParsing="false" onAction="#switchToAddCustomer" prefHeight="30.0" prefWidth="60.0" text="Add" />
+                          <Button layoutX="1130.0" layoutY="520.0" mnemonicParsing="false" onAction="#deleteCustomer" prefHeight="30.0" prefWidth="60.0" text="Delete" />
+                          <Label layoutX="10.0" layoutY="527.0" />
+                      </children>
+                  </AnchorPane>
+              </content>
+          </Tab>
+
         </tabs>
       </TabPane>
    </children>
