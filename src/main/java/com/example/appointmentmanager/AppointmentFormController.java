@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class AppointmentFormController {
@@ -237,7 +238,24 @@ public class AppointmentFormController {
             ps.setInt(1, comboBoxCustomers.getValue());
             ResultSet customerAppointments = ps.executeQuery();
 
+            String title = "Customer Appointment Overlap";
+            String body = "Current appointment overlaps this appointment:\n";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
+            while (customerAppointments.next()) {
+                if ((startTS.before(customerAppointments.getTimestamp(4)) || startTS.equals(customerAppointments.getTimestamp(4))) && (endTS.after(customerAppointments.getTimestamp(3)) || endTS.equals(customerAppointments.getTimestamp(3)))) {
+                    if (customerAppointments.getInt(1) != Integer.parseInt(fieldID.getText())) {
+                        errors += 1;
+
+                        body += "ID: " + customerAppointments.getInt(1) + "\n" +
+                                "Title: " + customerAppointments.getString(2) + "\n" +
+                                "Starts: " + customerAppointments.getTimestamp(3).toLocalDateTime().format(formatter) + "\n" +
+                                "Ends: " + customerAppointments.getTimestamp(4).toLocalDateTime().format(formatter);
+
+                        Utility.showError(title, body);
+                    }
+                }
+            }
         }
 
         if (errors == 0) {
