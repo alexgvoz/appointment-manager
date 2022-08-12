@@ -114,6 +114,8 @@ public class HomepageController {
     }
 
     private void getAppointments() throws SQLException {
+        allAppointments.clear();
+
         String sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Start, a.End, a.Customer_ID, a.User_ID, c.Contact_Name " +
                 "FROM appointments AS a " +
                 "JOIN contacts AS c ON a.Contact_ID=c.Contact_ID";
@@ -221,6 +223,8 @@ public class HomepageController {
 
                 labelCustomers.setText(tableCustomers.getSelectionModel().getSelectedItem().getName() + " has been deleted.");
                 allCustomers.remove(tableCustomers.getSelectionModel().getSelectedItem());
+
+                getAppointments();
             }
         } else {
             Utility.showError("No customer selected!", "Pleaese select a customer to delete.");
