@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.appointmentmanager.HomepageController">
    <children>
@@ -68,20 +69,36 @@
               <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                       <children>
-                          <TableView layoutX="10.0" layoutY="10.0" prefHeight="500.0" prefWidth="1180.0">
+                          <TableView fx:id="tableReports" layoutX="10.0" layoutY="10.0" prefHeight="250.0" prefWidth="1180.0">
                               <columns>
                                   <TableColumn prefWidth="45.0" text="ID" />
-                                  <TableColumn prefWidth="190.0" text="Name" />
-                                  <TableColumn minWidth="0.0" prefWidth="225.0" text="Phone" />
-                                  <TableColumn minWidth="0.0" prefWidth="165.0" text="Division ID" />
-                                  <TableColumn prefWidth="300.0" text="Address" />
-                                  <TableColumn prefWidth="253.0" text="Postal Code" />
+                                  <TableColumn prefWidth="220.0" text="Title" />
+                                  <TableColumn minWidth="0.0" prefWidth="296.0" text="Description" />
+                                  <TableColumn minWidth="0.0" prefWidth="260.0" text="Start Date/Time" />
+                                  <TableColumn prefWidth="248.0" text="End Date/Time" />
+                                  <TableColumn prefWidth="109.0" text="CustomerID" />
                               </columns>
                           </TableView>
-                          <Button layoutX="1060.0" layoutY="520.0" mnemonicParsing="false" onAction="#switchToEditCustomer" prefHeight="30.0" prefWidth="60.0" text="Edit" />
-                          <Button layoutX="990.0" layoutY="520.0" mnemonicParsing="false" onAction="#switchToAddCustomer" prefHeight="30.0" prefWidth="60.0" text="Add" />
-                          <Button layoutX="1130.0" layoutY="520.0" mnemonicParsing="false" onAction="#deleteCustomer" prefHeight="30.0" prefWidth="60.0" text="Delete" />
                           <Label layoutX="10.0" layoutY="527.0" />
+                        <ComboBox fx:id="comboBoxContact" layoutX="525.0" layoutY="270.0" onAction="#getReportAppointments" prefHeight="30.0" prefWidth="150.0" />
+                        <ComboBox fx:id="comboBoxType" layoutX="195.0" layoutY="362.0" onAction="#getTypeAmount" prefHeight="30.0" prefWidth="150.0" />
+                        <Label layoutX="165.0" layoutY="329.0" text="Total Amount of Appointments:">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="129.0" layoutY="368.0" text="Type:" />
+                        <Label layoutX="129.0" layoutY="408.0" text="Month:" />
+                        <ComboBox fx:id="comboBoxMonth" layoutX="195.0" layoutY="402.0" onAction="#getMonthAmount" prefHeight="30.0" prefWidth="150.0" />
+                        <Label layoutX="129.0" layoutY="448.0" text="Country:" />
+                        <Label layoutX="129.0" layoutY="488.0" text="Customer:" />
+                        <ComboBox fx:id="comboBoxCountry" layoutX="195.0" layoutY="442.0" onAction="#setCountryAmount" prefHeight="30.0" prefWidth="150.0" />
+                        <ComboBox fx:id="comboBoxCustomer" layoutX="195.0" layoutY="482.0" onAction="#setCustomerAmount" prefHeight="30.0" prefWidth="150.0" />
+                        <Label fx:id="labelType" layoutX="365.0" layoutY="368.0" text="Amount:" />
+                        <Label fx:id="labelMonth" layoutX="365.0" layoutY="409.0" text="Amount:" />
+                        <Label fx:id="labelCountry" layoutX="365.0" layoutY="449.0" text="Amount:" />
+                        <Label fx:id="labelCustomer" layoutX="365.0" layoutY="488.0" text="Amount:" />
+                        <Label fx:id="labelContact" layoutX="695.0" layoutY="277.0" text="Amount:" />
                       </children>
                   </AnchorPane>
               </content>

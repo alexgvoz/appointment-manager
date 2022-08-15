@@ -21,6 +21,9 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * Login controller
+ */
 public class LoginController {
     @FXML
     private TextField fieldUserName;
@@ -33,6 +36,9 @@ public class LoginController {
 
     private ResourceBundle localetext = ResourceBundle.getBundle("Login", Locale.getDefault());
 
+    /**
+     * Initializes the login controller
+     */
     @FXML
     private void initialize() {
         fieldUserName.setPromptText(localetext.getString("username"));
@@ -41,6 +47,13 @@ public class LoginController {
         labelTimezone.setText(localetext.getString("timezone") + ": " + ZoneId.systemDefault());
 
     }
+
+    /**
+     * Handles login attempt
+     * @param event
+     * @throws SQLException
+     * @throws IOException
+     */
     @FXML
     private void loginAttempt(ActionEvent event) throws SQLException, IOException {
         String enteredUsername = fieldUserName.getText();
@@ -64,6 +77,12 @@ public class LoginController {
 
     }
 
+    /**
+     * Gets user from database
+     * @param username is user to get
+     * @return
+     * @throws SQLException
+     */
     private ResultSet getUser(String username) throws SQLException {
         String sql = "SELECT User_ID, User_Name, Password FROM users WHERE User_Name = ?";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
@@ -74,6 +93,11 @@ public class LoginController {
         return rs;
     }
 
+    /**
+     * Logs login attempt
+     * @param username is user to log
+     * @param attempt_result
+     */
     private void logLoginAttempt(String username, boolean attempt_result)  {
         try {
             FileWriter logFile = new FileWriter("login_activity", true);

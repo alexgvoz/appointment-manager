@@ -1,5 +1,8 @@
 package com.example.appointmentmanager;
 
+/**
+ * Customer class
+ */
 public class Customer {
     private int id;
     private String name;
@@ -17,24 +20,42 @@ public class Customer {
         this.divisionId = divisionId;
     }
 
+    /**
+     * @return the id
+     */
     public int getId() { return id; }
 
+    /**
+     * @return the name
+     */
     public String getName(){
         return name;
     }
 
+    /**
+     * @return the address
+     */
     public String getAddress(){
         return address;
     }
 
+    /**
+     * @return the postalCode
+     */
     public String getPostalCode(){
         return postalCode;
     }
 
+    /**
+     * @return the phone
+     */
     public String getPhone(){
         return phone;
     }
 
+    /**
+     * @return the divisionId
+     */
     public int getDivisionID(){
         return divisionId;
     }

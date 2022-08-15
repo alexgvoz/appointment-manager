@@ -17,6 +17,9 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+/**
+ * Appointment form controller
+ */
 public class AppointmentFormController {
     @FXML
     private TextField fieldID;
@@ -68,6 +71,10 @@ public class AppointmentFormController {
     private ObservableList<Integer> listUsers = FXCollections.observableArrayList();
     private ObservableList<Integer> listCustomers = FXCollections.observableArrayList();
 
+    /**
+     * Initializes the appointment form controller
+     * @throws SQLException
+     */
     @FXML
     private void initialize() throws SQLException {
         getContacts();
@@ -104,6 +111,9 @@ public class AppointmentFormController {
         }
     }
 
+    /**
+     * Sets time spinner values
+     */
     private void spinnerHandler() {
         var hourStartFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 12);
         hourStartFactory.setWrapAround(true);
@@ -120,8 +130,16 @@ public class AppointmentFormController {
         spinnerEndMinute.setValueFactory(minuteEndFactory);
     }
 
+    /**
+     * Sets current appointment
+     * @param appointment is appointment to set
+     */
     public void setAppointment(Appointment appointment) { this.appointment = appointment;}
 
+    /**
+     * @return next appointment ID
+     * @throws SQLException
+     */
     public int getNextID() throws SQLException {
         String sql = "SELECT `AUTO_INCREMENT` " +
                 "FROM  INFORMATION_SCHEMA.TABLES " +
@@ -135,6 +153,10 @@ public class AppointmentFormController {
         return autoInc.getInt(1);
     }
 
+    /**
+     * Gets users from database
+     * @throws SQLException
+     */
     private void getUsers() throws SQLException {
         String sql = "SELECT User_ID " +
                 "FROM  users";
@@ -149,6 +171,10 @@ public class AppointmentFormController {
         comboBoxUsers.getSelectionModel().selectFirst();
     }
 
+    /**
+     * Gets customers from database
+     * @throws SQLException
+     */
     private void getCustomers() throws SQLException {
         String sql = "SELECT Customer_ID " +
                 "FROM  customers";
@@ -163,6 +189,12 @@ public class AppointmentFormController {
         comboBoxCustomers.getSelectionModel().selectFirst();
     }
 
+    /**
+     * Handles adding and editing of appointments
+     * @param event
+     * @throws SQLException
+     * @throws IOException
+     */
     @FXML
     private void handleAppointment(ActionEvent event) throws SQLException, IOException {
         Integer errors = 0;
@@ -299,6 +331,10 @@ public class AppointmentFormController {
         }
     }
 
+    /**
+     * Gets contacts from database
+     * @throws SQLException
+     */
     @FXML
     private void getContacts() throws SQLException {
         String sql = "SELECT Contact_ID, Contact_Name " +
@@ -314,6 +350,11 @@ public class AppointmentFormController {
         comboBoxContact.getSelectionModel().selectFirst();
     }
 
+    /**
+     * Switches to homepage
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void switchToHomepage(ActionEvent event) throws IOException {
         appointment = null;

@@ -1,10 +1,11 @@
 package com.example.appointmentmanager;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Appointment class
+ */
 public class Appointment {
     private int id;
     private String title;
@@ -41,32 +42,88 @@ public class Appointment {
         this.endDateTime = end;
     }
 
+    /**
+     * @return the id
+     */
     public int getId(){ return id; }
 
+    /**
+     * @return the title
+     */
     public String getTitle(){ return title; }
 
+    /**
+     * @return the description
+     */
     public String getDescription(){ return description; }
 
+    /**
+     * @return the location
+     */
     public String getLocation(){ return location; }
 
+    /**
+     * @return the contact
+     */
     public String getContact(){ return contact; }
 
+    /**
+     * @return the type
+     */
     public String getType(){ return type; }
 
+    /**
+     * @return the customerID
+     */
     public int getCustomerID(){ return customerID; }
 
+    /**
+     * @return the userID
+     */
     public int getUserID(){ return userID; }
 
+    /**
+     * @return the startDate
+     */
     public String getStartDate(){ return startDate; }
 
+    /**
+     * @return the startTime
+     */
     public String getStartTime(){ return startTime; }
 
+    /**
+     * @return the endDate
+     */
     public String getEndDate(){ return endDate; }
 
+    /**
+     * @return the endTime
+     */
     public String getEndTime(){ return endTime; }
 
+    /**
+     * @return the startDateTime
+     */
     public LocalDateTime getStartDateTime() { return startDateTime; }
 
+    /**
+     * @return the endDateTime
+     */
     public LocalDateTime getEndDateTime() { return endDateTime; }
+
+    /**
+     * @return the formatted startDateTime
+     */
+    public String getSimpleStartDateTime() {
+        return startDateTime.format(DateTimeFormatter.ofPattern("MMM dd, yyyy hh:mm"));
+    }
+
+    /**
+     * @return the formatted endDateTime
+     */
+    public String getSimpleEndDateTime() {
+        return endDateTime.format(DateTimeFormatter.ofPattern("MMM dd, yyyy hh:mm"));
+    }
 
 }

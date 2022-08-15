@@ -17,6 +17,9 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Customer form controller
+ */
 public class CustomerFormController {
 
     @FXML
@@ -51,6 +54,10 @@ public class CustomerFormController {
     private Map<String, Integer> divisionList = new HashMap<>();
     private int selectedCountry = 0;
 
+    /**
+     * Initializes the customer form controller
+     * @throws SQLException
+     */
     @FXML
     private void initialize() throws SQLException {
         getCountries();
@@ -71,8 +78,16 @@ public class CustomerFormController {
         }
     }
 
+    /**
+     * Sets current customer
+     * @param customer is customer to set
+     */
     public void setCustomer(Customer customer) { this.customer = customer; }
 
+    /**
+     * @return the next customer ID
+     * @throws SQLException
+     */
     public int getNextID() throws SQLException {
         String sql = "SELECT `AUTO_INCREMENT` " +
                 "FROM  INFORMATION_SCHEMA.TABLES " +
@@ -86,6 +101,10 @@ public class CustomerFormController {
         return autoInc.getInt(1);
     }
 
+    /**
+     * Gets countries from database
+     * @throws SQLException
+     */
     private void getCountries() throws SQLException {
         String sql = "SELECT Country_ID, Country " +
                 "FROM  countries";
@@ -101,6 +120,10 @@ public class CustomerFormController {
         getDivisions();
     }
 
+    /**
+     * Gets divisons from database
+     * @throws SQLException
+     */
     @FXML
    private void getDivisions() throws SQLException {
        String sql = "SELECT Division_ID, Division, Country_ID " +
@@ -121,6 +144,10 @@ public class CustomerFormController {
        comboBoxDivision.getSelectionModel().selectFirst();
    }
 
+    /**
+     * Gets country based on division from database
+     * @throws SQLException
+     */
    private void getCountryFromDivision() throws SQLException {
        String sql = "SELECT d.Division_ID, d.Division, d.Country_ID, c.Country " +
                "FROM  first_level_divisions AS d " +
@@ -137,6 +164,12 @@ public class CustomerFormController {
        }
    }
 
+    /**
+     * Handles adding and editing of customer
+     * @param event
+     * @throws SQLException
+     * @throws IOException
+     */
    @FXML
    private void handleCustomer(ActionEvent event) throws SQLException, IOException {
         Integer errors = 0;
@@ -198,6 +231,11 @@ public class CustomerFormController {
         }
    }
 
+    /**
+     * Switches to homepage
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void switchToHomepage(ActionEvent event) throws IOException {
         customer = null;
