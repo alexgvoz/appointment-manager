@@ -74,12 +74,12 @@ public class HomepageController {
     private HashMap<String, Integer> customerAmount = new HashMap<>();
     private static boolean fromLogin = false;
 
+    @FXML
     /**
      * Initializes the homepage controller
      * @throws SQLException
      * @throws InterruptedException
      */
-    @FXML
     private void initialize() throws SQLException, InterruptedException {
         getCustomers();
         getAppointments();
@@ -432,6 +432,7 @@ public class HomepageController {
 
     /**
      * Filters appointments based on datepicker
+     * Both lambas appear in this method. They are being used to filter appointments from an observable array.
      */
     @FXML
     private void filterAppointments() {
@@ -441,8 +442,9 @@ public class HomepageController {
         } else if (radioMonthly.isSelected()) {
             filteredAppointments = FXCollections.observableArrayList(allAppointments.stream()
                     .filter(appointment -> appointment.getStartDateTime()
-                    .getMonthValue()
-                     == pickerFilter.getValue().getMonthValue() && appointment.getStartDateTime().getYear() == pickerFilter.getValue().getYear()).collect(Collectors.toList()));
+                    .getMonthValue() == pickerFilter.getValue().getMonthValue() &&
+                            appointment.getStartDateTime().getYear() == pickerFilter.getValue().getYear())
+                    .collect(Collectors.toList()));
 
 
             tableAppointments.setItems(filteredAppointments);
@@ -453,7 +455,9 @@ public class HomepageController {
 
             filteredAppointments = FXCollections.observableArrayList(allAppointments.stream()
                     .filter(appointment -> appointment.getStartDateTime()
-                            .get(localWeekFields.weekOfYear()) == pickerFilter.getValue().get(localWeekFields.weekOfYear()) && appointment.getStartDateTime().getYear() == pickerFilter.getValue().getYear()).collect(Collectors.toList()));
+                            .get(localWeekFields.weekOfYear()) == pickerFilter.getValue().get(localWeekFields.weekOfYear()) &&
+                            appointment.getStartDateTime().getYear() == pickerFilter.getValue().getYear())
+                    .collect(Collectors.toList()));
 
             tableAppointments.setItems(filteredAppointments);
             tableAppointments.getSortOrder().add(tableAppointments.getColumns().get(0));
